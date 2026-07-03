@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Albarán {{ albaran.numero_albaran }} - {{ albaran.proveedor.nombre }}</h2>
+
+<p><strong>Proveedor:</strong> {{ albaran.proveedor }}</p>
+<p><strong>Pedido:</strong> {{ albaran.pedido }}</p>
+<p><strong>Fecha recepción:</strong> {{ albaran.fecha_recepcion }}</p>
+<p><strong>Estado:</strong> {{ albaran.estado }}</p>
+<p><strong>Factura:</strong> {{ albaran.factura }}</p>
+
+<hr>
+
+{% if albaran.pedido and albaran.estado == "CONFIRMADO" and not albaran.factura %}
+    <a href="{% url 'generar_factura_desde_albaran' albaran.id %}" 
+       class="btn btn-primary" 
+       style="background-color:#007bff; color:white; padding:10px 20px; border-radius:5px;">
+        Generar factura
+    </a>
+{% endif %}
+
+<hr>
+
+<!-- Botón volver: corregido para evitar NoReverseMatch -->
+<a href="/admin/appcompras/albarancompra/" class="btn btn-secondary">Volver</a>
+
+{% endblock %}

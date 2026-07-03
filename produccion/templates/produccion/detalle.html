@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Detalle de Producción</h2>
+
+<div class="card mb-3">
+    <div class="card-header">
+        Información general
+    </div>
+    <div class="card-body">
+        <p><strong>Escandallo:</strong> {{ produccion.escandallo }}</p>
+        <p><strong>Fecha:</strong> {{ produccion.fecha }}</p>
+        <p><strong>Responsable:</strong> {{ produccion.responsable }}</p>
+        <p><strong>Rendimiento real:</strong> {{ produccion.rendimiento_real }}</p>
+        <p><strong>Observaciones:</strong> {{ produccion.observaciones }}</p>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header">
+        Ingredientes utilizados
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ingrediente</th>
+                    <th>Cantidad teórica</th>
+                    <th>Unidad</th>
+                    <th>Cantidad real</th>
+                    <th>Merma</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for linea in lineas %}
+                <tr>
+                    <td>{{ linea.ingrediente.nombre }}</td>
+                    <td>{{ linea.cantidad_teorica }}</td>
+                    <td>{{ linea.unidad }}</td>
+                    <td>{{ linea.cantidad_real }}</td>
+                    <td>{{ linea.merma }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No hay líneas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="{% url 'produccion_lista' %}" class="btn btn-secondary">Volver a la lista</a>
+{% endblock %}

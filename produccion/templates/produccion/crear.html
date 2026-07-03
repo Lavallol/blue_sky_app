@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Nueva Producción</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="card mb-3">
+        <div class="card-header">Datos de la producción</div>
+        <div class="card-body">
+            {{ form.as_p }}
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">Ingredientes</div>
+        <div class="card-body">
+            {{ formset.management_form }}
+            {% for form in formset %}
+                <div class="border p-3 mb-2">
+                    {{ form.as_p }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar producción</button>
+</form>
+{% endblock %}

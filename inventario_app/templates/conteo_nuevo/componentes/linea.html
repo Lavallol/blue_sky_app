@@ -1,0 +1,77 @@
+<tr data-linea-id="{{ linea.id }}" data-producto-id="{{ linea.producto.id }}">
+
+    <!-- CÓDIGO DE BARRAS CORRECTO -->
+    <td>{{ linea.producto.codigo_barras }}</td>
+
+    <!-- CÓDIGO INTERNO CORRECTO -->
+    <td>{{ linea.producto.codigo_interno }}</td>
+
+    <td>{{ linea.producto.nombre_interno }}</td>
+
+    <!-- PRECIO COSTE CORRECTO -->
+    <td>{{ linea.precio_coste|floatformat:2 }}</td>
+
+    <td>{{ linea.stock_teorico|floatformat:2 }}</td>
+
+    <td>
+        {% if linea.sesion.estado|lower == "abierta" or linea.sesion.estado|lower == "reabierta" %}
+            <input type="text"
+                   class="input-stock-contado"
+                   inputmode="decimal"
+                   data-linea-id="{{ linea.id }}"
+                   value="{{ linea.stock_contado|default_if_none:0 }}"
+                   style="width:70px; text-align:center;">
+        {% else %}
+            {{ linea.stock_contado|floatformat:2 }}
+        {% endif %}
+    </td>
+
+    <td class="importe-contado" data-linea-id="{{ linea.id }}">
+        {{ linea.importe_contado|floatformat:2 }}
+    </td>
+
+    <td class="diferencia"
+        data-linea-id="{{ linea.id }}"
+        style="font-weight:bold;
+               color:
+               {% if linea.diferencia > 0 %}green
+               {% elif linea.diferencia < 0 %}red
+               {% else %}#333{% endif %};">
+        {{ linea.diferencia|floatformat:2 }}
+    </td>
+
+    <td class="importe-aumenta" data-linea-id="{{ linea.id }}">
+        {{ linea.importe_aumenta|floatformat:2 }}
+    </td>
+
+    <td class="importe-disminuye" data-linea-id="{{ linea.id }}">
+        {{ linea.importe_disminuye|floatformat:2 }}
+    </td>
+
+    <td>
+        {% if linea.sesion.estado|lower == "abierta" or linea.sesion.estado|lower == "reabierta" %}
+            <input type="text"
+                   class="input-motivo"
+                   data-linea-id="{{ linea.id }}"
+                   value="{{ linea.motivo|default_if_none:'' }}"
+                   placeholder="Motivo (si hay diferencia)"
+                   style="width:120px;">
+        {% else %}
+            {{ linea.motivo }}
+        {% endif %}
+    </td>
+
+    <td>
+        {% if linea.sesion.estado|lower == "abierta" or linea.sesion.estado|lower == "reabierta" %}
+            <button type="button"
+                    class="btn-eliminar-linea"
+                    data-linea-id="{{ linea.id }}"
+                    style="background:#dc3545; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;">
+                Eliminar
+            </button>
+        {% else %}
+            —
+        {% endif %}
+    </td>
+
+</tr>

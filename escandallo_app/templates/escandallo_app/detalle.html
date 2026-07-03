@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ escandallo.nombre }}</h2>
+
+<p><strong>Descripción:</strong> {{ escandallo.descripcion }}</p>
+<p><strong>Rendimiento:</strong> {{ escandallo.rendimiento }}</p>
+
+<hr>
+
+<h3>Ingredientes</h3>
+
+<a href="{% url 'escandallo_ingrediente_crear' escandallo.id %}" class="btn btn-success mb-3">
+    Añadir ingrediente
+</a>
+
+{% if lineas %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for linea in lineas %}
+        <tr>
+            <td>{{ linea.producto.nombre }}</td>
+            <td>{{ linea.cantidad }}</td>
+            <td>{{ linea.unidad }}</td>
+            <td>
+                <a href="{% url 'escandallo_ingrediente_editar' linea.id %}" class="btn btn-warning btn-sm">Editar</a>
+                <a href="{% url 'escandallo_ingrediente_eliminar' linea.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No hay ingredientes registrados.</p>
+{% endif %}
+
+<hr>
+
+<h3>Cálculos</h3>
+<p><strong>Coste total:</strong> {{ escandallo.coste_total }} €</p>
+<p><strong>Coste por ración:</strong> {{ escandallo.coste_por_racion }} €</p>
+
+<hr>
+
+<a href="{% url 'escandallo_editar' escandallo.id %}" class="btn btn-warning">Editar escandallo</a>
+<a href="{% url 'escandallo_eliminar' escandallo.id %}" class="btn btn-danger">Eliminar escandallo</a>
+<a href="{% url 'escandallo_list' %}" class="btn btn-secondary">Volver</a>
+
+{% endblock %}

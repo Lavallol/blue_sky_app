@@ -1,0 +1,228 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Conteo por código de barras</title>
+
+    <link rel="stylesheet" href="{% static 'css/bluesky.css' %}">
+</head>
+
+<body>
+
+<div class="continua-box">
+
+    <!-- ENCABEZADO -->
+    <div class="continua-header">
+        <h2>Conteo por código de barras</h2>
+    </div>
+
+    <div class="subinfo">
+        Sesión: <strong>{{ sesion.nombre }}</strong> —
+        {{ lineas|length }} productos —
+        Estado:
+        {% if sesion.estado == "abierta" %}
+            <span class="badge badge-open">abierta</span>
+        {% elif sesion.estado == "reabierta" %}
+            <span class="badge badge-open">reabierta</span>
+        {% else %}
+            <span class="badge badge-closed">cerrada</span>
+        {% endif %}
+        <br>
+        Usuario: {{ user.username }} — ID: {{ sesion.id }}
+    </div>
+    <!-- BARRA DE ACCIONES -->
+    <div class="continua-actions">
+        <a class="btn btn-secondary" href="/inventario/productos/">📦 Lista de productos</a>
+        <a class="btn btn-secondary" href="/inventario/productos/crear/">➕ Crear producto</a>
+        <a class="btn btn-secondary" href="/inventario/conteos/">📋 Lista de conteos</a>
+        <a class="btn btn-secondary" href="/inventario/escandallos/">🧮 Escandallos</a>
+        <a class="btn btn-secondary" href="/inventario/produccion/">🏭 Producción</a>
+    </div>
+
+    <!-- PANEL DE RESUMEN CONTABLE -->
+    <div class="continua-summary">
+        <h3>Resumen contable</h3>
+        <ul>
+            <li><strong>Total teórico:</strong> {{ total_teorico|floatformat:2 }} €</li>
+            <li><strong>Total contado:</strong> {{ total_contado|floatformat:2 }} €</li>
+            <li><strong>Diferencia total:</strong> {{ total_diferencia|floatformat:2 }} €</li>
+            <li><strong>Aumento total:</strong> {{ total_aumento|floatformat:2 }} €</li>
+            <li><strong>Disminución total:</strong> {{ total_disminucion|floatformat:2 }} €</li>
+        </ul>
+    </div>
+
+    <!-- CAJA DE ESCANEO -->
+    <div class="scan-box">
+        <h3>Escanee un código de barras</h3>
+
+        {% if sesion.estado == "cerrada" %}
+            <p style="color:red; font-weight:bold;">Esta sesión está cerrada. No se pueden añadir más líneas.</p>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="scan-row">
+                    <input class="input" type="text" name="codigo" placeholder="Código de barras" autofocus>
+                    <input class="input" type="number" name="cantidad" value="1" min="1">
+                    <button class="btn btn-primary" type="submit">Añadir al conteo</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+
+    <!-- FILTRO -->
+    <label for="filtro"><strong>Filtrar en la tabla por nombre de producto</strong></label>
+    <input class="input" type="text" id="filtro" placeholder="Escriba parte del nombre del producto...">
+
+    <!-- TABLA -->
+    <div class="continua-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th class="num">Precio coste</th>
+                    <th class="num">Stock teórico</th>
+                    <th class="num">Importe teórico</th>
+                    <th class="num">Stock contado</th>
+                    <th class="num">Importe contado</th>
+                    <th class="num">Diferencia</th>
+                    <th class="num">Aumento €</th>
+                    <th class="num">Disminución €</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for l in lineas %}
+                <tr data-linea="{{ l.id }}">
+                    <td>{{ l.codigo_barras }}</td>
+                    <td>{{ l.producto.nombre_interno }}</td>
+
+                    <td class="num">{{ l.precio_coste|floatformat:2 }} €</td>
+                    <td class="num">{{ l.stock_teorico|floatformat:2 }}</td>
+                    <td class="num importe-teorico">{{ l.importe_teorico|floatformat:2 }} €</td>
+
+                    <!-- STOCK CONTADO EDITABLE -->
+                    <td class="num">
+                        {% if sesion.estado != "cerrada" %}
+                            <input type="number"
+                                   value="{{ l.stock_contado }}"
+                                   step="0.01"
+                                   class="edit-stock"
+                                   data-linea="{{ l.id }}">
+                        {% else %}
+                            {{ l.stock_contado|floatformat:2 }}
+                        {% endif %}
+                    </td>
+
+                    <td class="num importe-contado">{{ l.importe_contado|floatformat:2 }} €</td>
+
+                    <td class="num diferencia">{{ l.diferencia|floatformat:2 }}</td>
+
+                    <!-- Aumento -->
+                    <td class="num aumento">
+                        {% if l.diferencia > 0 %}
+                            {{ l.importe_diferencia|floatformat:2 }}
+                        {% else %}
+                            0.00
+                        {% endif %}
+                    </td>
+
+                    <!-- Disminución -->
+                    <td class="num disminucion">
+                        {% if l.diferencia < 0 %}
+                            {{ l.importe_diferencia|floatformat:2|stringformat:"s"|cut:"-" }}
+                        {% else %}
+                            0.00
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+            <!-- TOTALES -->
+            <tfoot>
+                <tr>
+                    <th colspan="2">Totales</th>
+                    <th></th>
+                    <th></th>
+                    <th class="num total-teorico">{{ total_teorico|floatformat:2 }} €</th>
+                    <th></th>
+                    <th class="num total-contado">{{ total_contado|floatformat:2 }} €</th>
+                    <th></th>
+                    <th class="num total-aumento">{{ total_aumento|floatformat:2 }} €</th>
+                    <th class="num total-disminucion">{{ total_disminucion|floatformat:2 }} €</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="continua-total">
+        Total líneas: {{ lineas|length }}
+    </div>
+
+    <!-- BOTONES DE CIERRE / REAPERTURA (SOLO VISUALES, SIN ACCIÓN) -->
+    <div class="continua-actions">
+        {% if sesion.estado == "abierta" or sesion.estado == "reabierta" %}
+            <button class="btn btn-danger" type="button" disabled
+                    title="Acción de finalizar pendiente de configurar">
+                🔒 Finalizar conteo
+            </button>
+        {% endif %}
+
+        {% if sesion.estado == "cerrada" %}
+            <button class="btn btn-warning" type="button" disabled
+                    title="Acción de reapertura pendiente de configurar">
+                🔓 Reabrir conteo
+            </button>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- ========================================================= -->
+<!-- SCRIPT AJAX PARA EDICIÓN RÁPIDA EN LÍNEA -->
+<!-- ========================================================= -->
+<script>
+document.querySelectorAll(".edit-stock").forEach(input => {
+    input.addEventListener("change", function() {
+
+        const lineaId = this.dataset.linea;
+        const valor = this.value;
+
+        fetch(`/inventario/ajax/actualizar-linea/${lineaId}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "X-Requested-With": "XMLHttpRequest",
+            },
+            body: new URLSearchParams({ valor: valor })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.ok) {
+                alert(data.error);
+                return;
+            }
+
+            const fila = input.closest("tr");
+
+            // Actualizar columnas
+            fila.querySelector(".importe-contado").innerText = data.importe_contado.toFixed(2) + " €";
+            fila.querySelector(".diferencia").innerText = data.diferencia.toFixed(2);
+
+            // Aumento
+            fila.querySelector(".aumento").innerText =
+                data.diferencia > 0 ? data.importe_diferencia.toFixed(2) : "0.00";
+
+            // Disminución
+            fila.querySelector(".disminucion").innerText =
+                data.diferencia < 0 ? Math.abs(data.importe_diferencia).toFixed(2) : "0.00";
+        });
+    });
+});
+</script>
+
+</body>
+</html>

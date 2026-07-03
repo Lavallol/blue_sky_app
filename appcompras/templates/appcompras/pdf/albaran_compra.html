@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Albarán {{ albaran.numero_albaran }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 13px; }
+        h1, h2, h3 { margin-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        .totales td { font-weight: bold; }
+        .seccion { margin-top: 25px; }
+    </style>
+</head>
+<body>
+
+<h1>Albarán de Compra</h1>
+<h2>Nº {{ albaran.numero_albaran }}</h2>
+
+<div class="seccion">
+    <h3>Proveedor</h3>
+    <p>
+        <strong>{{ albaran.proveedor.nombre }}</strong><br>
+        CIF: {{ albaran.proveedor.cif }}<br>
+        {{ albaran.proveedor.direccion }}<br>
+        {{ albaran.proveedor.poblacion }} ({{ albaran.proveedor.provincia }})
+    </p>
+</div>
+
+<div class="seccion">
+    <h3>Datos del albarán</h3>
+    <p>
+        Fecha recepción: <strong>{{ albaran.fecha_recepcion }}</strong><br>
+        Estado: <strong>{{ albaran.estado }}</strong><br>
+        Pedido origen: <strong>{{ albaran.pedido.id if albaran.pedido }}</strong>
+    </p>
+</div>
+
+<div class="seccion">
+    <h3>Detalle de líneas</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cant. recibida</th>
+                <th>Precio</th>
+                <th>Desc.</th>
+                <th>IVA</th>
+                <th>Total línea</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for linea in albaran.lineas.all %}
+            <tr>
+                <td>{{ linea.producto.nombre_interno }}</td>
+                <td>{{ linea.cantidad_recibida }}</td>
+                <td>{{ linea.precio_unitario }}</td>
+                <td>{{ linea.descuento_linea }}</td>
+                <td>{{ linea.iva }}%</td>
+                <td>{{ linea.total_linea }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="seccion">
+    <h3>Totales</h3>
+    <table class="totales">
+        <tr>
+            <td>Subtotal</td>
+            <td>{{ albaran.subtotal }}</td>
+        </tr>
+        <tr>
+            <td>IVA total</td>
+            <td>{{ albaran.iva_total }}</td>
+        </tr>
+        <tr>
+            <td>Total albarán</td>
+            <td>{{ albaran.total }}</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

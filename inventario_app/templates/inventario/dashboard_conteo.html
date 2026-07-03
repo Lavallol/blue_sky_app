@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Dashboard de diferencias de inventario</h1>
+
+<hr>
+
+<h3>Resumen económico</h3>
+
+<ul class="list-group mb-4">
+    <li class="list-group-item">
+        <strong>Total mermas:</strong> {{ total_mermas }} €
+    </li>
+    <li class="list-group-item">
+        <strong>Total ajustes positivos:</strong> {{ total_positivos }} €
+    </li>
+    <li class="list-group-item">
+        <strong>Total neto:</strong> {{ total_neto }} €
+    </li>
+</ul>
+
+<hr>
+
+<h3>Top 10 mermas (pérdidas)</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Diferencia</th>
+            <th>Precio coste</th>
+            <th>Valor económico</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for l in top_mermas %}
+        <tr>
+            <td>{{ l.producto.nombre_interno }}</td>
+            <td>{{ l.diferencia }}</td>
+            <td>{{ l.precio_coste }}</td>
+            <td>{{ l.valor_diferencia }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">Sin datos.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<h3>Top 10 ajustes positivos</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Diferencia</th>
+            <th>Precio coste</th>
+            <th>Valor económico</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for l in top_positivos %}
+        <tr>
+            <td>{{ l.producto.nombre_interno }}</td>
+            <td>{{ l.diferencia }}</td>
+            <td>{{ l.precio_coste }}</td>
+            <td>{{ l.valor_diferencia }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">Sin datos.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<h3>Ranking de productos por impacto económico</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Valor total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in ranking_productos %}
+        <tr>
+            <td>{{ r.producto__nombre_interno }}</td>
+            <td>{{ r.total }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2">Sin datos.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

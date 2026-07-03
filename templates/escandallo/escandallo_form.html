@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Nuevo escandallo</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'escandallo_list' %}" class="btn btn-secondary me-2">Cancelar</a>
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

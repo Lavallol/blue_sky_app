@@ -1,0 +1,17 @@
+{% extends "admin/change_form.html" %}
+
+{% load i18n admin_urls %}
+
+{% block object-tools %}
+    {{ block.super }}
+
+    {% if mostrar_boton_generar_albaran %}
+        <li>
+            <a href="{% url 'admin:appcompras_pedidocompra_generar_albaran' original.id %}"
+               class="button"
+               style="background-color:#1e88e5; color:white; font-weight:bold;">
+                Generar Albarán
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}

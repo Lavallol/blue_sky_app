@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sesión de Conteo</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 25px;
+            background: #fafafa;
+        }
+
+        .barra-acciones-conteo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e5e5e5;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .titulo-sesion {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .acciones-derecha {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-accion {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+
+        .btn-accion.primario {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-accion.secundario {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-accion.peligro {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #input-codigo {
+            width: 380px;
+            padding: 12px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .barra-totales {
+            background: #ffffff;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e5e5;
+            display: flex;
+            gap: 40px;
+            font-size: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .tabla-conteo {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .tabla-conteo th {
+            background: #f8f9fa;
+            padding: 10px;
+            border-bottom: 2px solid #ddd;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .tabla-conteo td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body data-sesion-id="{{ sesion.id }}">
+
+<div class="barra-acciones-conteo">
+    <div class="acciones-izquierda">
+        <span class="titulo-sesion">
+            Sesión #{{ sesion.id }} — {{ sesion.nombre }} — Estado: {{ sesion.get_estado_display }}
+        </span>
+    </div>
+
+    <div class="acciones-derecha">
+
+        <a href="{% url 'resumen_sesion' sesion.id %}" class="btn-accion primario">Resumen</a>
+
+        <a href="{% url 'exportar_excel_conteo' sesion.id %}" class="btn-accion secundario">Exportar Excel</a>
+
+        <a href="{% url 'importar_excel_conteo' sesion.id %}" class="btn-accion secundario">Importar Excel</a>
+
+        <a href="{% url 'exportar_pdf_conteo' sesion.id %}" class="btn-accion secundario">Exportar PDF</a>
+
+        {% if sesion.estado == "abierta" or sesion.estado == "reabierta" %}
+            <a href="{% url 'cerrar_sesion' sesion.id %}" class="btn-accion peligro">Cerrar Sesión</a>
+        {% endif %}
+
+        {% if sesion.estado == "cerrada" %}
+            <a href="{% url 'aplicar_diferencias' sesion.id %}" class="btn-accion primario">Aplicar Diferencias</a>
+            <a href="{% url 'reabrir_sesion' sesion.id %}" class="btn-accion secundario">Reabrir Sesión</a>
+        {% endif %}
+
+        {% if sesion.estado == "aplicada" %}
+            <a href="{% url 'reabrir_sesion' sesion.id %}" class="btn-accion secundario">Reabrir Sesión</a>
+        {% endif %}
+
+    </div>
+</div>
+
+<div class="barra-totales">
+    <div><strong>Importe Contado:</strong> <span id="total-contado">{{ totales.importe_contado|floatformat:2 }}</span> €</div>
+    <div><strong>Aumenta:</strong> <span id="total-aumenta">{{ totales.importe_aumenta|floatformat:2 }}</span> €</div>
+    <div><strong>Disminuye:</strong> <span id="total-disminuye">{{ totales.importe_disminuye|floatformat:2 }}</span> €</div>
+</div>
+
+{% if sesion.estado == "abierta" or sesion.estado == "reabierta" %}
+<input type="text" id="input-codigo" placeholder="Escanea o escribe código, interno o nombre" autofocus>
+{% endif %}
+
+<table class="tabla-conteo">
+    <thead>
+        <tr>
+            <th>Código Barras</th>
+            <th>Código Interno</th>
+            <th>Producto</th>
+            <th>Precio Coste</th>
+            <th>Stock Teórico</th>
+            <th>Stock Contado</th>
+            <th>Importe Contado</th>
+            <th>Diferencia</th>
+            <th>Importe Aumenta</th>
+            <th>Importe Disminuye</th>
+            <th>Motivo</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+
+    <tbody id="tabla_lineas">
+        {% for linea in lineas %}
+            {% include "conteo_nuevo/componentes/linea.html" %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<script defer src="{% static 'conteo_nuevo/js/sesion_REAL.js' %}"></script>
+
+</body>
+</html>

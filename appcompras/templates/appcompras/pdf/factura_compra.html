@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura {{ factura.numero_factura }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 13px; }
+        h1, h2, h3 { margin-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        .totales td { font-weight: bold; }
+        .seccion { margin-top: 25px; }
+    </style>
+</head>
+<body>
+
+<h1>Factura de Compra</h1>
+<h2>Nº {{ factura.numero_factura }}</h2>
+
+<div class="seccion">
+    <h3>Proveedor</h3>
+    <p>
+        <strong>{{ factura.proveedor.nombre }}</strong><br>
+        CIF: {{ factura.proveedor.cif }}<br>
+        {{ factura.proveedor.direccion }}<br>
+        {{ factura.proveedor.poblacion }} ({{ factura.proveedor.provincia }})
+    </p>
+</div>
+
+<div class="seccion">
+    <h3>Datos de la factura</h3>
+    <p>
+        Fecha factura: <strong>{{ factura.fecha_factura }}</strong><br>
+        Condición de pago: <strong>{{ factura.condicion_pago.nombre }}</strong><br>
+        Estado: <strong>{{ factura.estado_factura }}</strong>
+    </p>
+</div>
+
+<div class="seccion">
+    <h3>Albaranes asociados</h3>
+    {% if factura.albaranes.all %}
+        <ul>
+            {% for alb in factura.albaranes.all %}
+                <li>Albarán {{ alb.numero_albaran }} — {{ alb.fecha_recepcion }} — Total: {{ alb.total }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay albaranes asociados.</p>
+    {% endif %}
+</div>
+
+<div class="seccion">
+    <h3>Detalle de líneas</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cant.</th>
+                <th>Precio</th>
+                <th>Desc.</th>
+                <th>IVA</th>
+                <th>Impuestos</th>
+                <th>Total línea</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for linea in factura.lineas.all %}
+            <tr>
+                <td>{{ linea.producto.nombre_interno }}</td>
+                <td>{{ linea.cantidad }}</td>
+                <td>{{ linea.precio_unitario }}</td>
+                <td>{{ linea.importe_descuento }}</td>
+                <td>{{ linea.iva }}%</td>
+                <td>{{ linea.importe_impuestos }}</td>
+                <td>{{ linea.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="seccion">
+    <h3>Totales</h3>
+    <table class="totales">
+        <tr>
+            <td>Subtotal</td>
+            <td>{{ factura.importe_subtotal }}</td>
+        </tr>
+        <tr>
+            <td>Impuestos</td>
+            <td>{{ factura.importe_impuestos }}</td>
+        </tr>
+        <tr>
+            <td>Total factura</td>
+            <td>{{ factura.total }}</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

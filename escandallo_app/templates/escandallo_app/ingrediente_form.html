@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>
+    {% if editar %}
+        Editar ingrediente de {{ escandallo.nombre }}
+    {% else %}
+        Añadir ingrediente a {{ escandallo.nombre }}
+    {% endif %}
+</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{% url 'escandallo_detalle' escandallo.id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumen de Conteo — Sesión {{ sesion.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        h1, h2 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #444; padding: 4px; text-align: center; }
+        th { background: #f0f0f0; }
+        .totales { margin-top: 20px; }
+        .totales p { margin: 4px 0; }
+    </style>
+</head>
+<body>
+
+<h1>Resumen de Conteo</h1>
+<h2>Sesión #{{ sesion.id }}</h2>
+
+<div class="totales">
+    <p><strong>Nombre:</strong> {{ sesion.nombre }}</p>
+    <p><strong>Estado:</strong> {{ sesion.estado }}</p>
+    <p><strong>Fecha creación:</strong> {{ sesion.fecha_creacion }}</p>
+    <p><strong>Total Productos:</strong> {{ total_productos }}</p>
+    <p><strong>Valor Teórico:</strong> {{ valor_teorico }} €</p>
+    <p><strong>Valor Contado:</strong> {{ valor_contado }} €</p>
+    <p><strong>Diferencia Total:</strong> {{ diferencia_total }} €</p>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Código Barras</th>
+            <th>Código Interno</th>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Coste</th>
+            <th>Stock Teórico</th>
+            <th>Stock Contado</th>
+            <th>Importe Teórico</th>
+            <th>Importe Contado</th>
+            <th>Diferencia</th>
+            <th>Aumenta</th>
+            <th>Disminuye</th>
+            <th>Motivo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for linea in lineas %}
+        <tr>
+            <td>{{ linea.codigo_barras }}</td>
+            <td>{{ linea.codigo_interno }}</td>
+            <td>{{ linea.producto }}</td>
+            <td>{{ linea.precio }}</td>
+            <td>{{ linea.coste }}</td>
+            <td>{{ linea.stock_teorico }}</td>
+            <td>{{ linea.stock_contado }}</td>
+            <td>{{ linea.importe_teorico }}</td>
+            <td>{{ linea.importe_contado }}</td>
+            <td>{{ linea.diferencia }}</td>
+            <td>{{ linea.aumenta }}</td>
+            <td>{{ linea.disminuye }}</td>
+            <td>{{ linea.motivo }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

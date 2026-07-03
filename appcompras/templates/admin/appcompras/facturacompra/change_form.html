@@ -1,0 +1,16 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block after_related_objects %}
+    {% if original %}
+    <div class="module aligned" style="margin-top: 40px;">
+        <h2>Totales de la Factura</h2>
+
+        <div style="padding: 15px; background: #f8f8f8; border-radius: 6px;">
+            <p><strong>Subtotal:</strong> {{ original.importe_subtotal }} €</p>
+            <p><strong>Impuestos:</strong> {{ original.importe_impuestos }} €</p>
+            <p><strong>Total factura:</strong> <span style="font-size: 18px;">{{ original.total }} €</span></p>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

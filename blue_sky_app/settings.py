@@ -111,3 +111,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # LOGIN
 LOGIN_URL = '/admin/login/'
+
+print("CI/CD funcionando")

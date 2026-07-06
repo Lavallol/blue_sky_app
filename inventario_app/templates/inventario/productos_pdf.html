@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Productos</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 12px;
+            margin: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+
+        td {
+            border: 1px solid #ccc;
+            padding: 6px;
+        }
+
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Listado de Productos</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre interno</th>
+                <th>Proveedor</th>
+                <th>Categoría</th>
+                <th>Stock</th>
+                <th>Precio compra</th>
+                <th>Importe</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for p in productos %}
+            <tr>
+                <td>{{ p.codigo_interno }}</td>
+                <td>{{ p.nombre_interno }}</td>
+                <td>{{ p.nombre_proveedor }}</td>
+
+                <td>
+                    {% if p.categoria %}
+                        {{ p.categoria.nombre }}
+                    {% endif %}
+                </td>
+
+                <td>{{ p.stock_actual }}</td>
+                <td>{{ p.precio_compra }}</td>
+
+                <td>
+                    {% widthratio p.stock_actual 1 p.precio_compra as importe %}
+                    {{ importe|floatformat:2 }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

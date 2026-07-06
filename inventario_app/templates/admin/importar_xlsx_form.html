@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<h1>Importar XLSX en la sesión: {{ sesion.nombre }}</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p><strong>Seleccione archivo XLSX:</strong></p>
+    <input type="file" name="archivo" accept=".xlsx" required>
+    <br><br>
+    <button type="submit" class="default">Importar</button>
+</form>
+
+<br>
+<a href="{% url 'admin:inventario_app_conteosesion_change' sesion.id %}">Volver a la sesión</a>
+{% endblock %}

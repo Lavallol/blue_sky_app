@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 13px; }
+        h1 { text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #444; padding: 6px; text-align: left; }
+        th { background: #f0f0f0; }
+        .totales { margin-top: 20px; width: 40%; float: right; }
+        .totales td { border: none; }
+    </style>
+</head>
+<body>
+
+<h1>Factura de Compra Nº {{ factura.id }}</h1>
+
+<p><strong>Proveedor:</strong> {{ factura.proveedor }}</p>
+<p><strong>Fecha factura:</strong> {{ factura.fecha_factura }}</p>
+<p><strong>Estado:</strong> {{ factura.estado_factura }}</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Desc.</th>
+            <th>IVA</th>
+            <th>Total línea</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for linea in factura.lineas.all %}
+        <tr>
+            <td>{{ linea.producto }}</td>
+            <td>{{ linea.cantidad }}</td>
+            <td>{{ linea.precio_unitario }}</td>
+            <td>{{ linea.descuento_linea }}</td>
+            <td>{{ linea.iva }}</td>
+            <td>{{ linea.total_linea }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<table class="totales">
+    <tr><td><strong>Subtotal:</strong></td><td>{{ factura.subtotal }}</td></tr>
+    <tr><td><strong>IVA total:</strong></td><td>{{ factura.iva_total }}</td></tr>
+    <tr><td><strong>Total:</strong></td><td>{{ factura.total }}</td></tr>
+</table>
+
+</body>
+</html>

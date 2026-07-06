@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Importar Excel — Sesión #{{ sesion.id }}</h2>
+
+{% if errores %}
+    <div style="background:#ffdddd; padding:10px; border:1px solid #cc0000; margin-bottom:20px;">
+        <strong>Errores encontrados:</strong>
+        <ul>
+            {% for e in errores %}
+                <li>{{ e }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Seleccionar archivo Excel:</label><br>
+    <input type="file" name="archivo" accept=".xlsx" required><br><br>
+
+    <button type="submit" class="btn btn-primary">Importar</button>
+    <a href="{% url 'sesion_conteo' sesion.id %}" class="btn btn-secondary">Volver</a>
+</form>
+{% endblock %}

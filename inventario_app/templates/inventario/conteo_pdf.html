@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Conteo de inventario — Sesión {{ sesion.id }}</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+
+        tfoot th, tfoot td {
+            background: #fafafa;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Blue Sky App</h1>
+<h2>Informe de Conteo de Inventario</h2>
+<h3>Sesión {{ sesion.id }} — {{ sesion.nombre }}</h3>
+
+<p><strong>Estado:</strong> {{ sesion.estado }}</p>
+<p><strong>Usuario:</strong> {{ sesion.usuario }}</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Precio coste</th>
+            <th>Stock teórico</th>
+            <th>Importe teórico</th>
+            <th>Stock contado</th>
+            <th>Importe contado</th>
+            <th>Diferencia</th>
+            <th>Aumento €</th>
+            <th>Disminución €</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for l in lineas %}
+        <tr>
+            <td>{{ l.codigo_barras }}</td>
+            <td>{{ l.producto.nombre_interno }}</td>
+            <td>{{ l.precio_coste|floatformat:2 }} €</td>
+            <td>{{ l.stock_teorico|floatformat:2 }}</td>
+            <td>{{ l.importe_teorico|floatformat:2 }} €</td>
+            <td>{{ l.stock_contado|floatformat:2 }}</td>
+            <td>{{ l.importe_contado|floatformat:2 }} €</td>
+            <td>{{ l.diferencia|floatformat:2 }}</td>
+
+            <td>
+                {% if l.diferencia > 0 %}
+                    {{ l.importe_diferencia|floatformat:2 }} €
+                {% else %}
+                    0.00 €
+                {% endif %}
+            </td>
+
+            <td>
+                {% if l.diferencia < 0 %}
+                    {{ l.importe_diferencia|floatformat:2|cut:"-" }} €
+                {% else %}
+                    0.00 €
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th colspan="4" style="text-align:right;">Totales:</th>
+
+            <!-- Total teórico -->
+            <td>{{ total_teorico|floatformat:2 }} €</td>
+
+            <!-- Columna vacía debajo de Stock contado -->
+            <td></td>
+
+            <!-- Total contado -->
+            <td>{{ total_contado|floatformat:2 }} €</td>
+
+            <!-- Total diferencia -->
+            <td>{{ total_diferencia|floatformat:2 }} €</td>
+
+            <!-- Total aumento -->
+            <td>{{ total_aumento|floatformat:2 }} €</td>
+
+            <!-- Total disminución -->
+            <td>{{ total_disminucion|floatformat:2 }} €</td>
+        </tr>
+    </tfoot>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 13px; }
+        h1 { text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #444; padding: 6px; text-align: left; }
+        th { background: #f0f0f0; }
+        .totales { margin-top: 20px; width: 40%; float: right; }
+        .totales td { border: none; }
+    </style>
+</head>
+<body>
+
+<h1>Pedido de Compra Nº {{ pedido.id }}</h1>
+
+<p><strong>Proveedor:</strong> {{ pedido.proveedor }}</p>
+<p><strong>Fecha pedido:</strong> {{ pedido.fecha_pedido }}</p>
+<p><strong>Fecha prevista:</strong> {{ pedido.fecha_prevista }}</p>
+<p><strong>Estado:</strong> {{ pedido.estado }}</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cant. pedida</th>
+            <th>Cant. recibida</th>
+            <th>Precio</th>
+            <th>Desc.</th>
+            <th>IVA</th>
+            <th>Total línea</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for linea in pedido.lineas.all %}
+        <tr>
+            <td>{{ linea.producto }}</td>
+            <td>{{ linea.cantidad_pedida }}</td>
+            <td>{{ linea.cantidad_recibida }}</td>
+            <td>{{ linea.precio_unitario }}</td>
+            <td>{{ linea.descuento_linea }}</td>
+            <td>{{ linea.iva }}</td>
+            <td>{{ linea.total_linea }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<table class="totales">
+    <tr><td><strong>Subtotal:</strong></td><td>{{ pedido.subtotal }}</td></tr>
+    <tr><td><strong>IVA total:</strong></td><td>{{ pedido.iva_total }}</td></tr>
+    <tr><td><strong>Total:</strong></td><td>{{ pedido.total }}</td></tr>
+</table>
+
+</body>
+</html>

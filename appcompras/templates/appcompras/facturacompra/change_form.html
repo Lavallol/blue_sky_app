@@ -1,0 +1,36 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .boton-albaranes {
+        margin-bottom: 20px;
+        padding: 10px 15px;
+        background-color: #2c7be5;
+        color: white !important;
+        border-radius: 5px;
+        display: inline-block;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    .boton-albaranes:hover {
+        background-color: #1a68d1;
+        color: white !important;
+    }
+</style>
+
+<div>
+    {% if change %}
+        {#
+        <a href="{% url 'admin:appcompras_facturacompra_seleccionar_albaranes' original.id %}"
+           class="boton-albaranes">
+            Seleccionar albaranes
+        </a>
+        #}
+    {% endif %}
+</div>
+
+{{ block.super }}
+
+{% endblock %}

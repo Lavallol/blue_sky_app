@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h2 class="mb-4">Vista previa de importación de compras</h2>
+
+<!-- Resumen general -->
+<div class="alert alert-info">
+    <strong>Resumen:</strong><br>
+    Productos nuevos: {{ nuevos|length }}<br>
+    Productos a actualizar: {{ actualizados|length }}<br>
+    Errores detectados: {{ errores|length }}
+</div>
+
+<!-- Productos nuevos -->
+{% if nuevos %}
+<h4 class="mt-4 text-success">Productos nuevos</h4>
+<div class="table-responsive">
+    <table class="table table-bordered table-sm mt-2">
+        <thead class="table-success">
+            <tr>
+                <th>Código Barras</th>
+                <th>Nombre</th>
+                <th>Precio Compra</th>
+                <th>IVA</th>
+                <th>Categoría</th>
+                <th>Subcategoría</th>
+                <th>Unidad</th>
+                <th>Proveedor Ref</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in nuevos %}
+            <tr>
+                <td>{{ item.codigo }}</td>
+                <td>{{ item.nombre }}</td>
+                <td>{{ item.precio }}</td>
+                <td>{{ item.iva }}</td>
+                <td>{{ item.categoria }}</td>
+                <td>{{ item.subcategoria }}</td>
+                <td>{{ item.unidad }}</td>
+                <td>{{ item.proveedor_ref }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<!-- Productos a actualizar -->
+{% if actualizados %}
+<h4 class="mt-4 text-primary">Productos que se actualizarán</h4>
+<div class="table-responsive">
+    <table class="table table-bordered table-sm mt-2">
+        <thead class="table-primary">
+            <tr>
+                <th>Código Barras</th>
+                <th>Nombre Actual</th>
+                <th>Nombre Nuevo</th>
+                <th>Precio Actual</th>
+                <th>Precio Nuevo</th>
+                <th>Unidad Actual</th>
+                <th>Unidad Nueva</th>
+                <th>Proveedor Ref</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in actualizados %}
+            <tr>
+                <td>{{ item.codigo }}</td>
+                <td>{{ item.nombre_actual }}</td>
+                <td>{{ item.nombre_nuevo }}</td>
+                <td>{{ item.precio_actual }}</td>
+                <td>{{ item.precio_nuevo }}</td>
+                <td>{{ item.unidad_actual }}</td>
+                <td>{{ item.unidad_nueva }}</td>
+                <td>{{ item.proveedor_ref }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<!-- Errores -->
+{% if errores %}
+<h4 class="mt-4 text-danger">Errores detectados</h4>
+
+<div class="alert alert-danger">
+    Se han encontrado errores. Corrige el Excel y vuelve a intentarlo.
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-sm mt-2">
+        <thead class="table-danger">
+            <tr>
+                <th>Línea</th>
+                <th>Error</th>
+                <th>Datos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for error in errores %}
+            <tr>
+                <td>{{ error.linea }}</td>
+                <td>{{ error.motivo }}</td>
+                <td>{{ error.datos }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<!-- Botones -->
+<div class="mt-4">
+
+    {% if not errores %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="confirmar" value="1">
+
+        <button type="submit" class="btn btn-success">
+            Importar definitivamente
+        </button>
+    </form>
+    {% endif %}
+
+    <a href="{% url 'importar_excel' %}" class="btn btn-secondary mt-2">
+        Cancelar
+    </a>
+</div>
+
+{% endblock %}

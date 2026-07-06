@@ -1,0 +1,46 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<h1>Seleccionar albaranes para la factura {{ factura.id }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <table class="adminlist">
+        <thead>
+            <tr>
+                <th></th>
+                <th>ID</th>
+                <th>Proveedor</th>
+                <th>Fecha recepción</th>
+                <th>Total</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for alb in albaranes %}
+            <tr>
+                <td><input type="checkbox" name="albaran_ids" value="{{ alb.id }}"></td>
+                <td>{{ alb.id }}</td>
+                <td>{{ alb.proveedor }}</td>
+                <td>{{ alb.fecha_recepcion }}</td>
+                <td>{{ alb.total }}</td>
+                <td>{{ alb.estado }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No hay albaranes disponibles para este proveedor.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <input type="submit" class="button" value="Aceptar">
+</form>
+
+<br>
+<a href="{% url 'admin:appcompras_facturacompra_change' factura.id %}">Volver a la factura</a>
+
+{% endblock %}

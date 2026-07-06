@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumen de Sesión — Conteo #{{ sesion.id }}</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 25px;
+            background: #fafafa;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .panel-info {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 25px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .tarjetas {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .tarjeta {
+            width: 24%;
+            display: inline-block;
+            vertical-align: top;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-right: 1%;
+            background: white;
+        }
+
+        .tarjeta h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .tarjeta .valor {
+            margin-top: 6px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .positivo { color: green; }
+        .negativo { color: red; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow-x: auto; overflow-y: visible;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 10px;
+            border-bottom: 2px solid #ddd;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .right { text-align: right; }
+
+        .acciones {
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        .btn-primario { background: #007bff; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-dark { background: #343a40; color: white; }
+    </style>
+</head>
+
+<body>
+
+<h1>Resumen de Conteo — Sesión #{{ sesion.id }}</h1>
+
+<div class="panel-info">
+    <p><strong>Nombre:</strong> {{ sesion.nombre }}</p>
+    <p><strong>Estado:</strong> {{ sesion.get_estado_display }}</p>
+    <p><strong>Fecha creación:</strong> {{ sesion.fecha_creacion }}</p>
+
+
+<!-- TARJETAS DE TOTALES -->
+<div class="tarjetas">
+
+    <div class="tarjeta">
+        <h3>Total Productos</h3>
+        <div class="valor">{{ total_productos }}</div>
+</div>
+    
+
+    <div class="tarjeta">
+        <h3>Valor Teórico</h3>
+        <div class="valor">{{ valor_teorico|floatformat:2 }} €</div>
+</div>
+    
+
+    <div class="tarjeta">
+        <h3>Valor Contado</h3>
+        <div class="valor">{{ valor_contado|floatformat:2 }} €</div>
+</div>
+    
+
+    <div class="tarjeta">
+        <h3>Diferencia Total</h3>
+        <div class="valor {% if total_diferencias >= 0 %}positivo{% else %}negativo{% endif %}">
+            {{ total_diferencias|floatformat:2 }} €</div>
+</div>
+        
+    
+
+
+
+<h2>Detalle de Productos</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Código Barras</th>
+            <th>Código Interno</th>
+            <th>Producto</th>
+            <th>Precio Coste</th>
+            <th>Stock Teórico</th>
+            <th>Stock Contado</th>
+            <th>Importe Teórico</th>
+            <th>Importe Contado</th>
+            <th>Diferencia</th>
+            <th>Aumenta</th>
+            <th>Disminuye</th>
+            <th>Motivo</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for linea in lineas %}
+        <tr>
+            <td>{{ linea.codigo_barras }}</td>
+            <td>{{ linea.producto.codigo_interno }}</td>
+            <td>{{ linea.producto.nombre_interno }}</td>
+            <td class="right">{{ linea.precio_coste|floatformat:2 }}</td>
+            <td class="right">{{ linea.stock_teorico|floatformat:2 }}</td>
+            <td class="right">{{ linea.stock_contado|floatformat:2 }}</td>
+            <td class="right">{{ linea.importe_teorico|floatformat:2 }}</td>
+            <td class="right">{{ linea.importe_contado|floatformat:2 }}</td>
+
+            <td class="right {% if linea.diferencia > 0 %}positivo{% elif linea.diferencia < 0 %}negativo{% endif %}">
+                {{ linea.diferencia|floatformat:2 }}
+            </td>
+
+            <td class="right">{{ linea.importe_aumenta|floatformat:2 }}</td>
+            <td class="right">{{ linea.importe_disminuye|floatformat:2 }}</td>
+            <td>{{ linea.motivo }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div style="overflow-x: auto; width: 100%;">
+</div>
+
+
+<!-- ACCIONES -->
+<div class="acciones">
+
+    <a href="{% url 'sesion_conteo' sesion.id %}" class="btn btn-primario">Volver a la sesión</a>
+
+    {% if sesion.estado == "abierta" or sesion.estado == "reabierta" %}
+        <a href="{% url 'cerrar_sesion' sesion.id %}" class="btn btn-warning">Cerrar sesión</a>
+    {% endif %}
+
+    {% if sesion.estado == "cerrada" %}
+        <a href="{% url 'reabrir_sesion' sesion.id %}" class="btn btn-secondary">Reabrir sesión</a>
+        <a href="{% url 'aplicar_diferencias' sesion.id %}" class="btn btn-danger">Aplicar diferencias</a>
+    {% endif %}
+
+    <a href="{% url 'exportar_excel_conteo' sesion.id %}" class="btn btn-success">Exportar Excel</a>
+    <a href="{% url 'importar_excel_conteo' sesion.id %}" class="btn btn-info">Importar Excel</a>
+    <a href="{% url 'exportar_pdf_conteo' sesion.id %}" class="btn btn-dark">Exportar PDF</a>
+
+
+
+</body>
+</html>

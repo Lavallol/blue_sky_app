@@ -1,0 +1,176 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sesiones de Conteo</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 25px;
+            background: #fafafa;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        /* ============================
+           BOTÓN NUEVA SESIÓN
+        ============================ */
+        .btn-nueva {
+            padding: 10px 16px;
+            background: #007bff;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-nueva:hover {
+            opacity: 0.85;
+        }
+
+        /* ============================
+           TABLA PROFESIONAL
+        ============================ */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 10px;
+            border-bottom: 2px solid #ddd;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* ============================
+           ESTADOS
+        ============================ */
+        .estado {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .estado-abierta {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .estado-cerrada {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* ============================
+           BOTONES DE ACCIÓN
+        ============================ */
+        .btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-ver {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-resumen {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Sesiones de Conteo</h1>
+
+<a href="{% url 'nueva_sesion' %}" class="btn-nueva">➕ Nueva Sesión</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Usuario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for sesion in sesiones %}
+        <tr>
+            <td>{{ sesion.id }}</td>
+            <td>{{ sesion.nombre }}</td>
+            <td>{{ sesion.fecha_creacion }}</td>
+
+            <td>
+                {% if sesion.estado == "abierta" %}
+                    <span class="estado estado-abierta">ABIERTA</span>
+                {% else %}
+                    <span class="estado estado-cerrada">CERRADA</span>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if sesion.usuario %}
+                    {{ sesion.usuario.username }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+
+            <td>
+                <a href="{% url 'sesion_conteo' sesion.id %}" class="btn btn-ver">Ver</a>
+                <a href="{% url 'resumen_sesion' sesion.id %}" class="btn btn-resumen">Resumen</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="text-align:center; padding:20px;">
+                No hay sesiones abiertas.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

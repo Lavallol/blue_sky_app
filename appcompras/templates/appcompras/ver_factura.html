@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Factura {{ factura.id }} - {{ factura.proveedor.nombre }}</h2>
+
+<p><strong>Proveedor:</strong> {{ factura.proveedor }}</p>
+<p><strong>Fecha factura:</strong> {{ factura.fecha_factura }}</p>
+<p><strong>Observaciones:</strong> {{ factura.observaciones }}</p>
+
+<hr>
+
+<h3>Líneas de factura</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>IVA</th>
+            <th>Total línea</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for linea in factura.lineas.all %}
+        <tr>
+            <td>{{ linea.producto.nombre_interno }}</td>
+            <td>{{ linea.cantidad }}</td>
+            <td>{{ linea.precio }}</td>
+            <td>{{ linea.iva }}%</td>
+            <td>{{ linea.total_linea }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<h3>Totales</h3>
+<p><strong>Base imponible:</strong> {{ factura.base_imponible_total }}</p>
+<p><strong>IVA total:</strong> {{ factura.iva_total }}</p>
+<p><strong>Total factura:</strong> {{ factura.total_factura }}</p>
+
+<hr>
+
+{% if factura.asiento %}
+<h3>Asiento contable asociado</h3>
+<p><strong>ID Asiento:</strong> {{ factura.asiento.id }}</p>
+<p><strong>Descripción:</strong> {{ factura.asiento.descripcion }}</p>
+<p><strong>Fecha:</strong> {{ factura.asiento.fecha }}</p>
+{% endif %}
+
+<hr>
+
+<a href="/admin/appcompras/facturacompra/" class="btn btn-secondary">Volver</a>
+
+{% endblock %}

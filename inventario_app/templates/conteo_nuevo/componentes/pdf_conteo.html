@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumen de Conteo — Sesión #{{ sesion.id }}</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        /* TARJETAS DE TOTALES */
+        .tarjetas {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .tarjeta {
+            width: 24%;
+            display: inline-block;
+            vertical-align: top;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-right: 1%;
+        }
+
+        .tarjeta h3 {
+            margin: 0;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .tarjeta .valor {
+            margin-top: 6px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .positivo { color: #28a745; }
+        .negativo { color: #dc3545; }
+
+        /* TABLA DETALLADA */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #f0f0f0;
+            padding: 6px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+        }
+
+        td {
+            padding: 6px;
+            border: 1px solid #ccc;
+            font-size: 11px;
+        }
+
+        .right { text-align: right; }
+    </style>
+</head>
+
+<body>
+
+<h1>Resumen de Conteo — Sesión #{{ sesion.id }}</h1>
+
+<p><strong>Nombre:</strong> {{ sesion.nombre }}</p>
+<p><strong>Fecha creación:</strong> {{ sesion.fecha_creacion }}</p>
+
+<!-- TARJETAS DE TOTALES -->
+<div class="tarjetas">
+
+    <div class="tarjeta">
+        <h3>Total Productos</h3>
+        <div class="valor">{{ total_productos }}</div>
+    </div>
+
+    <div class="tarjeta">
+        <h3>Valor Teórico</h3>
+        <div class="valor">{{ valor_teorico|floatformat:2 }} €</div>
+    </div>
+
+    <div class="tarjeta">
+        <h3>Valor Contado</h3>
+        <div class="valor">{{ valor_contado|floatformat:2 }} €</div>
+    </div>
+
+    <div class="tarjeta">
+        <h3>Diferencia Total</h3>
+        <div class="valor {% if total_diferencias >= 0 %}positivo{% else %}negativo{% endif %}">
+            {{ total_diferencias|floatformat:2 }} €
+        </div>
+    </div>
+
+</div>
+
+<!-- TABLA DETALLADA -->
+<h2>Detalle de Productos</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Código Barras</th>
+            <th>Código Interno</th>
+            <th>Producto</th>
+            <th>Precio Coste</th>
+            <th>Stock Teórico</th>
+            <th>Stock Contado</th>
+            <th>Importe Teórico</th>
+            <th>Importe Contado</th>
+            <th>Diferencia</th>
+            <th>Importe Aumenta</th>
+            <th>Importe Disminuye</th>
+            <th>Motivo</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for linea in lineas %}
+        <tr>
+            <td>{{ linea.codigo_barras }}</td>
+            <td>{{ linea.producto.codigo_interno }}</td>
+            <td>{{ linea.producto.nombre_interno }}</td>
+            <td class="right">{{ linea.precio_coste|floatformat:2 }}</td>
+            <td class="right">{{ linea.stock_teorico|floatformat:2 }}</td>
+            <td class="right">{{ linea.stock_contado|floatformat:2 }}</td>
+            <td class="right">{{ linea.importe_teorico|floatformat:2 }}</td>
+            <td class="right">{{ linea.importe_contado|floatformat:2 }}</td>
+            <td class="right">{{ linea.diferencia|floatformat:2 }}</td>
+
+            <!-- Importe Aumenta -->
+            <td class="right">
+                {% if linea.diferencia > 0 %}
+                    {{ linea.diferencia|mul:linea.precio_coste|floatformat:2 }}
+                {% else %}
+                    0.00
+                {% endif %}
+            </td>
+
+            <!-- Importe Disminuye -->
+            <td class="right">
+                {% if linea.diferencia < 0 %}
+                    {{ linea.diferencia|abs|mul:linea.precio_coste|floatformat:2 }}
+                {% else %}
+                    0.00
+                {% endif %}
+            </td>
+
+            <td>{{ linea.motivo }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

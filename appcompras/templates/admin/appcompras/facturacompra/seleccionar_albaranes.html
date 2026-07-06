@@ -1,0 +1,83 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Seleccionar albaranes para la factura {{ factura.numero_factura }}</h1>
+
+<p>
+    Proveedor: <strong>{{ factura.proveedor.nombre }}</strong><br>
+    Fecha factura: <strong>{{ factura.fecha_factura }}</strong>
+</p>
+
+<style>
+    table.albaranes {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table.albaranes th, table.albaranes td {
+        border: 1px solid #ccc;
+        padding: 8px;
+    }
+    table.albaranes th {
+        background-color: #f0f0f0;
+    }
+    .boton-guardar {
+        margin-top: 20px;
+        padding: 10px 15px;
+        background-color: #2c7be5;
+        color: white !important;
+        border-radius: 5px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+    }
+    .boton-guardar:hover {
+        background-color: #1a68d1;
+    }
+</style>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {% if albaranes %}
+        <table class="albaranes">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>Número</th>
+                    <th>Fecha recepción</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alb in albaranes %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="albaran_ids" value="{{ alb.id }}">
+                    </td>
+                    <td>{{ alb.id }}</td>
+                    <td>{{ alb.numero_albaran }}</td>
+                    <td>{{ alb.fecha_recepcion }}</td>
+                    <td>{{ alb.estado }}</td>
+                    <td>{{ alb.total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit" class="boton-guardar">Asociar albaranes seleccionados</button>
+
+    {% else %}
+        <p>No hay albaranes disponibles para este proveedor.</p>
+    {% endif %}
+</form>
+
+<p style="margin-top:20px;">
+    <a href="{% url 'admin:appcompras_facturacompra_change' factura.id %}">Volver a la factura</a>
+</p>
+
+{% endblock %}

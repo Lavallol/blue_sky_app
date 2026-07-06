@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Escandallos</h2>
+
+<a href="{% url 'escandallo_crear' %}" class="btn btn-primary mb-3">Crear escandallo</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Coste total (€)</th>
+            <th>Raciones</th>
+            <th>Coste por ración (€)</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for escandallo in escandallos %}
+        <tr>
+            <td>{{ escandallo.nombre }}</td>
+            <td>{{ escandallo.coste_total }}</td>
+            <td>{{ escandallo.raciones }}</td>
+            <td>{{ escandallo.coste_por_racion }}</td>
+            <td>
+                <a href="{% url 'escandallo_detalle' escandallo.id %}" class="btn btn-sm btn-info">Ver</a>
+                <a href="{% url 'escandallo_editar' escandallo.id %}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{% url 'escandallo_eliminar' escandallo.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No hay escandallos registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

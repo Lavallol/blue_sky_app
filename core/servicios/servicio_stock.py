@@ -1,4 +1,4 @@
-rom inventario_app.models import Producto, MovimientoStock
+from inventario_app.models import Producto, MovimientoStock
 from django.db import transaction
 
 class ServicioStock:

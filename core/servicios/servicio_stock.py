@@ -34,6 +34,5 @@ class ServicioStock:
         MovimientoStock.objects.create(
             producto=producto,
             cantidad=cantidad,
-            tipo_movimiento=tipo,
             origen=origen
         )

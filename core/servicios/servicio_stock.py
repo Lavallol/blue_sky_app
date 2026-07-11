@@ -1,4 +1,4 @@
-from inventario_app.models import Producto, MovimientoStock
+rom inventario_app.models import Producto, MovimientoStock
 from django.db import transaction
 
 class ServicioStock:
@@ -30,9 +30,15 @@ class ServicioStock:
         producto.save()
 
     @staticmethod
-    def _registrar_movimiento(producto: Producto, cantidad: float, tipo: str, origen: str):
+    def _registrar_movimiento(producto: Producto, cantidad: float, origen: str, usuario):
+        stock_antes = producto.stock_actual
+        stock_despues = producto.stock_actual + cantidad
+
         MovimientoStock.objects.create(
             producto=producto,
-            cantidad=cantidad,
+            stock_antes=stock_antes,
+            stock_despues=stock_despues,
+            diferencia=cantidad,
+            usuario=usuario,
             origen=origen
-        )
+    )

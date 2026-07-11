@@ -290,11 +290,12 @@ def aplicar_diferencias(request, sesion_id):
 
     for linea in lineas:
         producto = linea.producto
-        
+
         ServicioStock.ajustar_stock(
             producto=producto,
             cantidad_final=linea.stock_contado,
-            origen=f"Conteo/Nueva #{sesion.id}"
+            origen=f"Conteo/Nueva #{sesion.id}",
+            usuario=request.user
         )
 
     sesion.generar_asientos_conteo(usuario=request.user)

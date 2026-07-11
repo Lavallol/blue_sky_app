@@ -19,10 +19,10 @@ class ServicioStock:
 
     @staticmethod
     @transaction.atomic
-    def ajustar_stock(producto: Producto, cantidad_final: float, origen: str):
+    def ajustar_stock(producto: Producto, cantidad_final: float, origen: str, usuario):
         diferencia = cantidad_final - producto.stock_actual
         ServicioStock._actualizar_producto(producto, cantidad_final)
-        ServicioStock._registrar_movimiento(producto, diferencia, "AJUSTE", origen)
+        ServicioStock._registrar_movimiento(producto, diferencia, "AJUSTE", origen, usuario)
 
     @staticmethod
     def _actualizar_producto(producto: Producto, nuevo_stock: float):

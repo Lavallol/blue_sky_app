@@ -148,10 +148,6 @@
         <div class="valor {% if total_diferencias >= 0 %}positivo{% else %}negativo{% endif %}">
             {{ total_diferencias|floatformat:2 }} €</div>
 </div>
-        
-    
-
-
 
 <h2>Detalle de Productos</h2>
 <table>
@@ -199,6 +195,33 @@
 <div style="overflow-x: auto; width: 100%;">
 </div>
 
+<h2>Movimientos de Stock Aplicados</h2>
+{% if movimientos %}
+<table>
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Stock Anterior</th>
+            <th>Stock Final</th>
+            <th>Diferencia</th>
+            <th>Fecha</th>
+       </tr>
+    </thead>
+    <tbody>
+        {% for mov in movimientos %}
+        <tr>
+            <td>{{ mov.producto.nombre }}</td>
+            <td class="right">{{ mov.stock_anterior }}</td>
+            <td class="right">{{ mov.stock_final }}</td>
+            <td class="right">{{ mov.diferencia }}</td>
+            <td>{{ mov.fecha|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No se registraron movimientos de stock para esta sesión.</p>
+{% endif %}
 
 <!-- ACCIONES -->
 <div class="acciones">

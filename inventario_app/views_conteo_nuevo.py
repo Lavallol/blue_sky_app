@@ -78,6 +78,10 @@ def resumen_sesion(request, sesion_id):
     valor_contado = sum((l.importe_contado for l in lineas), Decimal("0"))
     valor_teorico = sum((l.importe_teorico for l in lineas), Decimal("0"))
 
+    movimientos = MovimientoStock.objects.filter(
+        origen__icontains=f"Conteo/Nueva #{sesion_id}"
+    ).order_by('-fecha')
+
     return render(
         request,
         "conteo_nuevo/resumen.html",
@@ -88,6 +92,7 @@ def resumen_sesion(request, sesion_id):
             "total_diferencias": total_diferencias,
             "valor_contado": valor_contado,
             "valor_teorico": valor_teorico,
+            "movimientos": movimientos,
         },
     )
 
@@ -284,8 +289,12 @@ def aplicar_diferencias(request, sesion_id):
 
     for linea in lineas:
         producto = linea.producto
-        producto.stock_actual = linea.stock_contado
-        producto.save()
+        
+        ServicioStock.ajustar_stock(
+            producto=producto,
+            cantidad_final=linea.stock_contado,
+            origen=f"Conteo/Nueva #{sesion.id}"
+        )
 
     sesion.generar_asientos_conteo(usuario=request.user)
     sesion.generar_asiento_contable_real(usuario=request.user)

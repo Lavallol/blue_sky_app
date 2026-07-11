@@ -21,6 +21,7 @@ from inventario_app.servicios.servicio_procesar_recepcion import ServicioProcesa
 from inventario_app.models import Producto
 from inventario_app.models import Proveedor
 
+from core.servicios.servicio_stock import ServicioStock
 
 # ============================================================
 #   FUNCIÓN GENERAL PARA RENDERIZAR PDF
@@ -367,6 +368,13 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
 
         for linea in albaran.lineas.all():
             servicio.procesar_linea_albaran(linea)
+
+            # --- Integración del Servicio Central de Stock ---
+            ServicioStock.incrementar_stock(
+                producto=linea.producto,
+                cantidad=linea.cantidad,
+                origen=f"AlbaránCompra #{albaran.id}"
+            )
 
         albaran.estado = "CONFIRMADO"
         albaran.save()

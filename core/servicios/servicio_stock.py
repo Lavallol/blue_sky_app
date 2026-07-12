@@ -5,17 +5,17 @@ class ServicioStock:
 
     @staticmethod
     @transaction.atomic
-    def incrementar_stock(producto: Producto, cantidad: float, origen: str):
+    def incrementar_stock(producto: Producto, cantidad: float, origen: str, usuario):
         nuevo_stock = producto.stock_actual + cantidad
         ServicioStock._actualizar_producto(producto, nuevo_stock)
-        ServicioStock._registrar_movimiento(producto, cantidad, "ENTRADA", origen)
+        ServicioStock._registrar_movimiento(producto, cantidad, "ENTRADA", origen, usuario)
 
     @staticmethod
     @transaction.atomic
-    def disminuir_stock(producto: Producto, cantidad: float, origen: str):
+    def disminuir_stock(producto: Producto, cantidad: float, origen: str, usuario):
         nuevo_stock = producto.stock_actual - cantidad
         ServicioStock._actualizar_producto(producto, nuevo_stock)
-        ServicioStock._registrar_movimiento(producto, -cantidad, "SALIDA", origen)
+        ServicioStock._registrar_movimiento(producto, -cantidad, "SALIDA", origen, usuario)
 
     @staticmethod
     @transaction.atomic
@@ -41,4 +41,4 @@ class ServicioStock:
             diferencia=cantidad,
             usuario=usuario,
             origen=origen
-    )
+        )

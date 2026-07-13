@@ -299,6 +299,7 @@ def aplicar_diferencias(request, sesion_id):
             motivo="Conteo/Nueva",
             referencia=f"Conteo/Nueva #{sesion.id}",
             usuario=request.user,
+            sesion=sesion,
         )
 
     sesion.generar_asientos_conteo(usuario=request.user)

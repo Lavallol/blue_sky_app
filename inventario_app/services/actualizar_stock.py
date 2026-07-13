@@ -1,4 +1,3 @@
-# inventario_app/services/actualizar_stock.py
 from typing import Union
 from django.db import transaction
 from inventario_app.models import Producto
@@ -26,6 +25,7 @@ class ServicioActualizarStock:
         motivo: str,
         referencia: str,
         usuario=None,
+        sesion=None,
     ):
         """
         Ajusta el stock del producto y, si existe, registra un movimiento de stock.
@@ -45,6 +45,7 @@ class ServicioActualizarStock:
                 stock_anterior=stock_anterior,
                 stock_nuevo=nuevo_stock,
                 usuario=usuario,
+                sesion=sesion,
             )
 
     @staticmethod
@@ -56,6 +57,7 @@ class ServicioActualizarStock:
         stock_anterior: Union[int, float],
         stock_nuevo: Union[int, float],
         usuario=None,
+        sesion=None,
     ):
         """
         Registra un movimiento de stock si el modelo MovimientoStock existe.

@@ -298,6 +298,7 @@ def aplicar_diferencias(request, sesion_id):
             diferencia=linea.stock_contado - producto.stock_actual,
             motivo="Conteo/Nueva",
             referencia=f"Conteo/Nueva #{sesion.id}",
+            usuario=request.user,
         )
 
     sesion.generar_asientos_conteo(usuario=request.user)

@@ -74,4 +74,5 @@ class ServicioActualizarStock:
             referencia=referencia,
             origen=motivo,
             usuario=usuario,
+            sesion=sesion,
         )

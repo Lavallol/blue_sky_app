@@ -21,9 +21,7 @@ from inventario_app.servicios.servicio_procesar_recepcion import ServicioProcesa
 from inventario_app.models import Producto
 from inventario_app.models import Proveedor
 
-from core.servicios.servicio_stock import ServicioStock
 
-# ============================================================
 #   FUNCIÓN GENERAL PARA RENDERIZAR PDF
 # ============================================================
 

@@ -10,9 +10,6 @@ from django.contrib.auth.decorators import login_required
 
 from inventario_app.models import Producto
 from inventario_app.models import ConteoSesion, ConteoLinea
-from inventario_app.models import MovimientoStock 
-
-from inventario_app.services.actualizar_stock import ServicioActualizarStock
 
 # ============================================================
 # FUNCIÓN GLOBAL: Calcular totales de una sesión
@@ -292,22 +289,21 @@ def aplicar_diferencias(request, sesion_id):
 
     for linea in lineas:
         producto = linea.producto
+        # Ajuste directo del stock (comportamiento original)
+        producto.stock_actual = linea.stock_contado
+        producto.save()
 
-        ServicioActualizarStock.aplicar_ajuste(
-            producto=producto,
-            diferencia=linea.stock_contado - producto.stock_actual,
-            motivo="Conteo/Nueva",
-            referencia=f"Conteo/Nueva #{sesion.id}",
-            usuario=request.user,
-            sesion=sesion,
-        )
-
+    # Asientos contables (como antes)
     sesion.generar_asientos_conteo(usuario=request.user)
     sesion.generar_asiento_contable_real(usuario=request.user)
 
+    # Estado final de la sesión
     sesion.estado = "aplicada"
     sesion.fecha_aplicacion = timezone.now()
     sesion.save()
+
+    # Mensaje original
+    messages.info(request, "No se aplicaron movimientos (ajuste directo de stock).")
 
     return resumen_sesion(request, sesion_id)
 

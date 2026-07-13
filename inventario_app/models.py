@@ -196,6 +196,15 @@ class MovimientoStock(models.Model):
 
     notas = models.TextField(blank=True, null=True)
 
+    # ⭐ CAMPO QUE FALTABA
+    sesion = models.ForeignKey(
+        'inventario_app.SesionConteo',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="movimientos"
+    )
+
     class Meta:
         verbose_name = "Movimiento de stock"
         verbose_name_plural = "Movimientos de stock"

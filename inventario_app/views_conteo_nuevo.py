@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 from inventario_app.models import Producto
 from inventario_app.models import ConteoSesion, ConteoLinea
-from core.servicios.servicio_stock import ServicioStock
+from inventario_app.services.actualizar_stock import ServicioActualizarStock
 
 # ============================================================
 # FUNCIÓN GLOBAL: Calcular totales de una sesión
@@ -291,11 +291,11 @@ def aplicar_diferencias(request, sesion_id):
     for linea in lineas:
         producto = linea.producto
 
-        ServicioStock.ajustar_stock(
+        ServicioActualizarStock.aplicar_ajuste(
             producto=producto,
-            cantidad_final=linea.stock_contado,
-            origen=f"Conteo/Nueva #{sesion.id}",
-            usuario=request.user
+            diferencia=linea.stock_contado - producto.stock_actual,
+            motivo="Conteo/Nueva",
+            referencia=f"Conteo/Nueva #{sesion.id}",
         )
 
     sesion.generar_asientos_conteo(usuario=request.user)

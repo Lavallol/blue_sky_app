@@ -165,54 +165,6 @@ class Producto(models.Model):
 # MOVIMIENTOS DE STOCK (PROFESIONAL)
 # =========================================================
 
-class MovimientoStock(models.Model):
-    TIPOS = [
-        ("entrada", "Entrada"),
-        ("salida", "Salida"),
-        ("ajuste_positivo", "Ajustte positivo"),
-        ("ajuste_negativo", "Ajuste negativo"),
-        ("produccion_consumo", "Consumo producción"),
-        ("produccion_entrada", "Entrada producto final"),
-        ("venta", "Venta"),
-        ("devolucion", "Devolución"),
-    ]
-
-    producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
-    tipo = models.CharField(max_length=30, choices=TIPOS)
-
-    cantidad = models.DecimalField(max_digits=10, decimal_places=2)
-
-    stock_antes = models.DecimalField(max_digits=10, decimal_places=2)
-    stock_despues = models.DecimalField(max_digits=10, decimal_places=2)
-
-    coste_unitario = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True)
-    coste_total = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
-
-    referencia = models.CharField(max_length=255, blank=True, null=True)
-    origen = models.CharField(max_length=100, blank=True, null=True)
-
-    fecha = models.DateTimeField(auto_now_add=True)
-    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-
-    notas = models.TextField(blank=True, null=True)
-
-    # ⭐ CAMPO QUE FALTABA
-    sesion = models.ForeignKey(
-        'inventario_app.SesionConteo',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="movimientos"
-    )
-
-    class Meta:
-        verbose_name = "Movimiento de stock"
-        verbose_name_plural = "Movimientos de stock"
-        ordering = ["-fecha"]
-
-    def __str__(self):
-        return f"{self.producto.nombre_interno} — {self.tipo} — {self.cantidad}"
-
     @staticmethod
     def registrar(producto, cantidad, tipo, referencia="", origen="", usuario=None, coste_unitario=None):
         stock_antes = producto.stock_actual

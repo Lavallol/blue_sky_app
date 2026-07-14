@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from inventario_app.models import ConteoSesion
 
 # =========================================================
 # FUNCIÓN PARA GENERAR CÓDIGO INTERNO AUTOMÁTICO
@@ -198,7 +199,7 @@ class MovimientoStock(models.Model):
 
     # ⭐ CAMPO QUE FALTABA
     sesion = models.ForeignKey(
-        'inventario_app.SesionConteo',
+        ConteoSesion,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

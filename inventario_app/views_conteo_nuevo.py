@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 from inventario_app.models import Producto
 from inventario_app.models import ConteoSesion, ConteoLinea
+from inventario_app.models import MovimientoStock
 
 from django.contrib import messages
 

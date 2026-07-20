@@ -7,6 +7,7 @@ class AlbaranCompra(models.Model):
     ESTADOS_ALBARAN = [
         ('BORRADOR', 'Borrador'),
         ('CONFIRMADO', 'Confirmado'),
+        ('CANCELADO', 'Cancelado'),
         ('FACTURADO', 'Facturado'),
     ]
 

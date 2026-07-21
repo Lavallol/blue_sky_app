@@ -1,4 +1,4 @@
-from inventario_app.models import Producto, MovimientoStock
+from inventario_app.models import Producto
 
 class ServicioConfirmacionRecepcion:
     """
@@ -8,16 +8,15 @@ class ServicioConfirmacionRecepcion:
 
     def confirmar(self, linea_albaran):
         producto = linea_albaran.producto
-
+        
         # ✔ CORREGIDO: usar cantidad_recibida
         cantidad = linea_albaran.cantidad_recibida
-
+        
         # ✔ CORREGIDO: usar precio_unitario
         coste_unitario = linea_albaran.precio_unitario
-
+        
         # Registrar movimiento de stock profesional
-        MovimientoStock.registrar(
-            producto=producto,
+        producto.registrar(
             cantidad=cantidad,  # cantidad positiva = entrada
             tipo="entrada",
             referencia=f"Albarán {linea_albaran.albaran.id}",
@@ -25,6 +24,6 @@ class ServicioConfirmacionRecepcion:
             usuario=None,  # tu modelo Albarán no tiene usuario
             coste_unitario=coste_unitario,
         )
-
+        
         # Devolver datos para el siguiente servicio (valoración)
         return producto, cantidad, coste_unitario

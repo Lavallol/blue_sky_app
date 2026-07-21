@@ -317,7 +317,7 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
             alb.estado = "CANCELADO"
             alb.save()
 
-        messages.success(request, "Albaranes cancelados y stock revertido correctamente."
+        messages.success(request, "Albaranes cancelados y stock revertido correctamente.")
 
     def accion_copiar_lineas_desde_pedido(self, request, queryset):
         for albaran in queryset:

@@ -396,7 +396,18 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         messages.success(request, "Albaranes reabiertos correctamente.")
 
     reabrir_albaranes.short_description = "Reabrir albaranes seleccionados"
-    actions = ["reabrir_albaranes"]
+    actions = ["reabrir_albaranes", "cancelar_albaranes"]
+
+    def cancelar_albaranes(self, request, queryset):
+        for alb in queryset:
+            if alb.estado != "CONFIRMADO":
+                messages.error(request, f"El albarán {alb.id} no está confirmado, no se puede cancelar.")
+                continue
+
+            alb.estado = "CANCELADO"
+            alb.save()
+
+        messages.success(request, "Albaranes cancelados correctamente.")
 
     # Copia automática de líneas del Pedido al crear el Albarán
     def save_model(self, request, obj, form, change):

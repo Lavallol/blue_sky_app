@@ -299,7 +299,25 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         }),
     )
 
-    actions = ["reabrir_albaranes", "accion_copiar_lineas_desde_pedido"]
+    actions = ["reabrir_albaranes", "accion_copiar_lineas_desde_pedido", "cancelar_albaranes"]
+
+    def cancelar_albaranes(self, request, queryset):
+        for alb in queryset:
+            if alb.estado != "CONFIRMADO":
+                messages.error(request, f"El albarán {alb.id} no está confirmado, no se puede cancelar.")
+                continue
+
+            for linea in alb.lineas.all():
+                ServicioStock.revertir_stock(
+                    producto=linea.producto,
+                    cantidad=linea.cantidad,
+                    origen=f"Cancelación AlbaránCompra #{alb.id}"
+                )
+
+            alb.estado = "CANCELADO"
+            alb.save()
+
+        messages.success(request, "Albaranes cancelados y stock revertido correctamente."
 
     def accion_copiar_lineas_desde_pedido(self, request, queryset):
         for albaran in queryset:

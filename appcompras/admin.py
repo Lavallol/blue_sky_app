@@ -294,7 +294,7 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
             "fields": ("proveedor", "fecha_recepcion", "estado", "total")
         }),
         ("Mercancía recibida desde Pedido", {
-302     actions = ["reabrir_albaranes", "accion_copiar_lineas_desde_pedido", "cancelar_albaranes"]            "fields": ("pedido",),
+        actions = ["reabrir_albaranes", "accion_copiar_lineas_desde_pedido", "cancelar_albaranes"]            "fields": ("pedido",),
             "description": "Seleccione un Pedido pendiente para copiar sus líneas al Albarán."
         }),
     )

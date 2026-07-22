@@ -404,11 +404,17 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
 
     def reabrir_albaranes(self, request, queryset):
         if not request.user.has_perm("appcompras.puede_reabrir_albaranes_compra"):
-            messages.error(request, "No tiene permiso para reabrir albaranes.")
-            return
+           messages.error(request, "No tiene permiso para reabrir albaranes.")
+           return
 
         for alb in queryset:
-            alb.estado = "CONFIRMADO"
+            # Si ya está en borrador, no se puede reabrir
+            if alb.estado == "BORRADOR":
+               messages.error(request, f"El albarán {alb.id} ya está en borrador.")
+               continue
+
+            # Reabrir CONFIRMADO o CANCELADO → volver a BORRADOR
+            alb.estado = "BORRADOR"
             alb.save()
 
         messages.success(request, "Albaranes reabiertos correctamente.")

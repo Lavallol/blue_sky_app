@@ -420,7 +420,21 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         messages.success(request, "Albaranes reabiertos correctamente.")
 
     reabrir_albaranes.short_description = "Reabrir albaranes seleccionados"
-    actions = ["reabrir_albaranes", "cancelar_albaranes"]
+
+    def eliminar_albaranes(self, request, queryset):
+        for alb in queryset:
+            if alb.estado in ["CONFIRMADO", "FACTURADO"]:
+                messages.error(
+                    request,
+                    f"No se puede eliminar el albarán {alb.id} porque está {alb.estado.lower()}."
+                )
+                continue
+
+            alb.delete()
+
+        messages.success(request, "Albaranes eliminados correctamente.")
+
+    actions = ["reabrir_albaranes", "cancelar_albaranes", "eliminar_albaranes"]
 
     def cancelar_albaranes(self, request, queryset):
         for alb in queryset:

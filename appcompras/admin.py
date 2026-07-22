@@ -294,12 +294,12 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
             "fields": ("proveedor", "fecha_recepcion", "estado", "total")
         }),
         ("Mercancía recibida desde Pedido", {
-            "fields": ("pedido",),
+302     actions = ["reabrir_albaranes", "accion_copiar_lineas_desde_pedido", "cancelar_albaranes"]            "fields": ("pedido",),
             "description": "Seleccione un Pedido pendiente para copiar sus líneas al Albarán."
         }),
     )
 
-    actions = ["reabrir_albaranes", "accion_copiar_lineas_desde_pedido", "cancelar_albaranes"]
+    actions = ["reabrir_albaranes", "accion_copiar_lineas_desde_pedido", "cancelar_albaranes", "eliminar_albaranes"]
 
     def cancelar_albaranes(self, request, queryset):
         for alb in queryset:

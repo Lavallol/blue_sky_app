@@ -572,21 +572,18 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         # Si el usuario seleccionó un Pedido y el Albarán es nuevo
         if obj.pedido and not change:
             lineas_pedido = PedidoCompraLinea.objects.filter(pedido=obj.pedido)
-
             for linea in lineas_pedido:
                 AlbaranCompraLinea.objects.create(
                     albaran=obj,
                     producto=linea.producto,
-                    cantidad_pedida=linea.cantidad_pedida,
-                    cantidad_recibida=linea.cantidad_pedida,
+                    cantidad_recibida=linea.cantidad,
                     precio_unitario=linea.precio_unitario,
-                    descuento=linea.descuento_linea,
+                    descuento_linea=linea.descuento_linea,
                     iva=linea.iva,
-                    stock_antes=linea.producto.stock_actual,
-                    stock_despues=linea.producto.stock_actual + linea.cantidad_pedida
+                    total_linea=0
                 )
 
-                linea.producto.stock_actual += linea.cantidad_pedida
+                linea.producto.stock_actual += linea.cantidad
                 linea.producto.save()
 
             obj.pedido.estado = "CERRADO"

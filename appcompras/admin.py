@@ -576,14 +576,14 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
                 AlbaranCompraLinea.objects.create(
                     albaran=obj,
                     producto=linea.producto,
-                    cantidad_recibida=linea.cantidad,
+                    cantidad_recibida=linea.cantidad_pedida,
                     precio_unitario=linea.precio_unitario,
                     descuento_linea=linea.descuento_linea,
                     iva=linea.iva,
                     total_linea=0
                 )
 
-                linea.producto.stock_actual += linea.cantidad
+                linea.producto.stock_actual += linea.cantidad_pedida
                 linea.producto.save()
 
             obj.pedido.estado = "CERRADO"

@@ -429,7 +429,7 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         Solo muestra las líneas copiadas desde el Pedido.
         """
         if not obj.pedido:
-            return mark_safe("<p style='color: #888;'>No hay pedido seleccionado.</p>
+            return mark_safe("<p style='color: #888;'>No hay pedido seleccionado.</p>")
 
         lineas = obj.pedido.lineas.all()
 

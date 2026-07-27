@@ -582,8 +582,6 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
                     precio_unitario=linea.precio_unitario,
                     descuento=linea.descuento_linea,
                     iva=linea.iva,
-                    subtotal=linea.subtotal,
-                    total_linea=linea.total_linea,
                     stock_antes=linea.producto.stock_actual,
                     stock_despues=linea.producto.stock_actual + linea.cantidad_pedida
                 )

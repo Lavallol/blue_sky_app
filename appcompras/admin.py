@@ -355,7 +355,7 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
             "fields": ("proveedor", "fecha_recepcion", "estado", "total")
         }),
         ("Mercancía recibida desde Pedido", {
-            "fields": ("pedido",),
+            "fields": ("pedido", "render_lineas_pedido_visual"),
             "description": "Seleccione un Pedido pendiente para copiar sus líneas al Albarán."
         }),
     )

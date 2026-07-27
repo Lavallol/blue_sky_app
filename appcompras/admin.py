@@ -415,7 +415,12 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
 
     accion_copiar_lineas_desde_pedido.short_description = "Copiar líneas del Pedido y cerrar Pedido"
 
-    readonly_fields = ('subtotal', 'iva_total', 'total')
+    readonly_fields = (
+        'subtotal',
+        'iva_total',
+        'total',
+        'render_lineas_pedido_visual',
+    )
 
     class Media:
         js = ("appcompras/autocompletar_producto.js",)

@@ -422,6 +422,63 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         'render_lineas_pedido_visual',
     )
 
+    def render_lineas_pedido_visual(self, obj):
+        """
+        Renderiza un bloque visual con las líneas del Pedido seleccionado.
+        Este bloque NO es un inline y NO guarda datos.
+        Solo muestra las líneas copiadas desde el Pedido.
+        """
+        if not obj.pedido:
+            return mark_safe("<p style='color: #888;'>No hay pedido seleccionado.</p>
+
+        lineas = obj.pedido.lineas.all()
+
+        html = """
+        <h3 style='margin-top:20px;'>Líneas del Pedido (solo visual)</h3>
+        <table style='width:100%; border-collapse: collapse;'>
+            <thead>
+                <tr style='background:#f0f0f0;'>
+                    <th>Fecha Pedido</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Descuento</th>
+                    <th>Subtotal</th>
+                    <th>IVA</th>
+                    <th>Importe IVA</th>
+                    <th>Total con IVA</th>
+                    <th>Stock antes</th>
+                    <th>Stock después</th>
+                </tr>
+            </thead>
+            <tbody>
+        """
+
+        for linea in lineas:
+            subtotal = linea.cantidad * linea.precio_unitario
+            importe_iva = subtotal * (linea.iva / 100)
+            total_con_iva = subtotal + importe_iva
+
+            html += f"""
+                <tr>
+                    <td>{obj.pedido.fecha_pedido}</td>
+                    <td>{linea.producto.nombre}</td>
+                    <td>{linea.cantidad}</td>
+                    <td>{linea.precio_unitario:.2f}</td>
+                    <td>{linea.descuento_linea:.2f}</td>
+                    <td>{subtotal:.2f}</td>
+                    <td>{linea.iva}%</td>
+                    <td>{importe_iva:.2f}</td>
+                    <td>{total_con_iva:.2f}</td>
+                    <td>–</td>
+                    <td>–</td>
+                </tr>
+            """
+
+        html += "</tbody></table>"
+
+        return mark_safe(html)
+
     class Media:
         js = ("appcompras/autocompletar_producto.js",)
 

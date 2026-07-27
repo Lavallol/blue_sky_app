@@ -399,8 +399,6 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
                     precio_unitario=linea.precio_unitario,
                     descuento=linea.descuento,
                     iva=linea.iva,
-                    subtotal=linea.subtotal,
-                    total_con_iva=linea.total_con_iva,
                     stock_antes=linea.producto.stock,
                     stock_despues=linea.producto.stock + linea.cantidad
                 )
@@ -416,9 +414,6 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
     accion_copiar_lineas_desde_pedido.short_description = "Copiar líneas del Pedido y cerrar Pedido"
 
     readonly_fields = (
-        'subtotal',
-        'iva_total',
-        'total',
         'render_lineas_pedido_visual',
     )
 

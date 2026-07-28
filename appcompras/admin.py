@@ -298,6 +298,31 @@ def render_lineas_pedido_visual(self, obj):
 
     return mark_safe(html)
 
+# ---------------------------------------------------------
+# FILTRAR PEDIDOS POR PROVEEDOR (Martes 28)
+# ---------------------------------------------------------
+def get_form(self, request, obj=None, **kwargs):
+    form = super().get_form(request, obj, **kwargs)
+
+    # Caso 1: Editando un albarán existente
+    if obj and obj.proveedor:
+        form.base_fields['pedido'].queryset = PedidoCompra.objects.filter(
+            proveedor=obj.proveedor
+        )
+        return form
+
+    # Caso 2: Creando un albarán nuevo
+    proveedor_id = request.POST.get("proveedor")
+
+    if proveedor_id:
+        form.base_fields['pedido'].queryset = PedidoCompra.objects.filter(
+            proveedor_id=proveedor_id
+        )
+    else:
+        form.base_fields['pedido'].queryset = PedidoCompra.objects.none()
+
+    return form
+
 # ============================================================
 #   INLINES DEL ALBARÁN
 # ============================================================

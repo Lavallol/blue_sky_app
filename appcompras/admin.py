@@ -382,8 +382,15 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
     # 🟩 NUEVO BLOQUE — Rectángulo + Acción
     fieldsets = (
         ("Datos del Albarán", {
-            "fields": ("proveedor", "fecha_recepcion", "estado", "total")
-        }),
+            "fields": (
+                "proveedor",
+                "fecha_recepcion",
+                "estado",
+                "subtotal",
+                "iva_total",
+                "total",
+            )
+    }),
         ("Mercancía recibida desde Pedido", {
             "fields": ("pedido", "render_lineas_pedido_visual"),
             "description": "Seleccione un Pedido pendiente para copiar sus líneas al Albarán."

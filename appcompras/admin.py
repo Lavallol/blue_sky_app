@@ -299,7 +299,7 @@ def render_lineas_pedido_visual(self, obj):
     return mark_safe(html)
 
 # ---------------------------------------------------------
-# FILTRAR PEDIDOS POR PROVEEDOR (Martes 28)
+# FILTRAR PEDIDOS POR PROVEEDOR (versión corregida)
 # ---------------------------------------------------------
 def get_form(self, request, obj=None, **kwargs):
     form = super().get_form(request, obj, **kwargs)
@@ -312,7 +312,12 @@ def get_form(self, request, obj=None, **kwargs):
         return form
 
     # Caso 2: Creando un albarán nuevo
-    proveedor_id = request.POST.get("proveedor")
+    # Primero intentamos leer proveedor desde GET (cuando el admin carga)
+    proveedor_id = request.GET.get("proveedor")
+
+    # Si no está en GET, intentamos POST (cuando el usuario ya envió el formulario)
+    if not proveedor_id:
+        proveedor_id = request.POST.get("proveedor")
 
     if proveedor_id:
         form.base_fields['pedido'].queryset = PedidoCompra.objects.filter(

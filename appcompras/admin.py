@@ -367,6 +367,13 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         }),
     )
 
+    # ---------------------------------------------------------
+    # PARCHE: Permitir que el proveedor llegue al filtro
+    # ---------------------------------------------------------
+    def get_changeform_initial_data(self, request):
+        proveedor_id = request.GET.get("proveedor")
+        return {"proveedor": proveedor_id} if proveedor_id else {}
+
     actions = ["reabrir_albaranes", "accion_copiar_lineas_desde_pedido", "cancelar_albaranes", "eliminar_albaranes"]
 
     def cancelar_albaranes(self, request, queryset):

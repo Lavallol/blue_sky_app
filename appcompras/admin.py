@@ -447,11 +447,22 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
                 )
             else:
                 # Caso 2: Creando un albarán nuevo
-                proveedor_id = request.POST.get("proveedor") or request.GET.get("proveedor")
+                proveedor_id = None
+
+                # Intentar obtener proveedor desde el formulario
+                if hasattr(request, "_form"):
+                    try:
+                        proveedor_id = request._form.cleaned_data.get("proveedor")
+                    except:
+                        proveedor_id = None
+
+                # Intentar obtener proveedor desde GET/POST (por si acaso)
+                proveedor_id = proveedor_id or request.POST.get("proveedor") or request.GET.get("proveedor")
+
                 if proveedor_id:
                     kwargs["queryset"] = PedidoCompra.objects.filter(
-                       proveedor_id=proveedor_id,
-                       estado__in=[PedidoCompra.BORRADOR, PedidoCompra.CONFIRMADO]
+                        proveedor_id=proveedor_id,
+                        estado__in=[PedidoCompra.BORRADOR, PedidoCompra.CONFIRMADO]
                     )
                 else:
                     kwargs["queryset"] = PedidoCompra.objects.none()

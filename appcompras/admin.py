@@ -298,36 +298,6 @@ def render_lineas_pedido_visual(self, obj):
 
     return mark_safe(html)
 
-# ---------------------------------------------------------
-# FILTRAR PEDIDOS POR PROVEEDOR (versión corregida)
-# ---------------------------------------------------------
-def get_form(self, request, obj=None, **kwargs):
-    form = super().get_form(request, obj, **kwargs)
-
-    # Caso 1: Editando un albarán existente
-    if obj and obj.proveedor:
-        form.base_fields['pedido'].queryset = PedidoCompra.objects.filter(
-            proveedor=obj.proveedor
-        )
-        return form
-
-    # Caso 2: Creando un albarán nuevo
-    # Primero intentamos leer proveedor desde GET (cuando el admin carga)
-    proveedor_id = request.GET.get("proveedor")
-
-    # Si no está en GET, intentamos POST (cuando el usuario ya envió el formulario)
-    if not proveedor_id:
-        proveedor_id = request.POST.get("proveedor")
-
-    if proveedor_id:
-        form.base_fields['pedido'].queryset = PedidoCompra.objects.filter(
-            proveedor_id=proveedor_id
-        )
-    else:
-        form.base_fields['pedido'].queryset = PedidoCompra.objects.none()
-
-    return form
-
 # ============================================================
 #   INLINES DEL ALBARÁN
 # ============================================================
@@ -453,6 +423,33 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
     readonly_fields = (
         'render_lineas_pedido_visual',
     )
+
+    # ---------------------------------------------------------
+    # FILTRAR PEDIDOS POR PROVEEDOR (bloque correcto)
+    # ---------------------------------------------------------
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "pedido":
+            albaran_id = request.resolver_match.kwargs.get("object_id")
+
+            # Caso 1: Editando un albarán existente
+            if albaran_id:
+                albaran = AlbaranCompra.objects.get(pk=albaran_id)
+                kwargs["queryset"] = PedidoCompra.objects.filter(
+                    proveedor=albaran.proveedor,
+                    estado__in=[PedidoCompra.BORRADOR, PedidoCompra.CONFIRMADO]
+                )
+            else:
+                # Caso 2: Creando un albarán nuevo
+                proveedor_id = request.POST.get("proveedor") or request.GET.get("proveedor")
+                if proveedor_id:
+                    kwargs["queryset"] = PedidoCompra.objects.filter(
+                       proveedor_id=proveedor_id,
+                       estado__in=[PedidoCompra.BORRADOR, PedidoCompra.CONFIRMADO]
+                    )
+                else:
+                    kwargs["queryset"] = PedidoCompra.objects.none()
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def render_lineas_pedido_visual(self, obj):
         """

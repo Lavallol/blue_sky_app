@@ -555,6 +555,13 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         for linea in albaran.lineas.all():
             servicio.procesar_linea_albaran(linea)
 
+            # --- Integración del Servicio Central de Stock ---
+            ServicioStock.incrementar_stock(
+                producto=linea.producto,
+                cantidad=linea.cantidad,
+                origen=f"AlbaránCompra #{albaran.id}"
+            )
+
     # ---------------------------------------------------------
     # PARCHE: Capturar proveedor ANTES de construir el campo Pedido
     # ---------------------------------------------------------
@@ -591,13 +598,6 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
                 form.base_fields["pedido"].queryset = PedidoCompra.objects.none()
 
         return form
-
-            # --- Integración del Servicio Central de Stock ---
-            ServicioStock.incrementar_stock(
-                producto=linea.producto,
-                cantidad=linea.cantidad,
-                origen=f"AlbaránCompra #{albaran.id}"
-            )
 
         albaran.estado = "CONFIRMADO"
         albaran.save()

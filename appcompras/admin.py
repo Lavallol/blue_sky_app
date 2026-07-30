@@ -599,6 +599,33 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
 
         return form
 
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+
+        albaran = form.instance
+
+        # Si no hay pedido seleccionado → no copiar nada
+        if not albaran.pedido:
+            return
+
+        # Si el albarán ya tiene líneas → no duplicar
+        if albaran.lineas.exists():
+            return
+
+        # Copiar líneas del pedido al albarán
+        for linea_pedido in albaran.pedido.lineas.all():
+            AlbaranCompraLinea.objects.create(
+                albaran=albaran,
+                producto=linea_pedido.producto,
+                cantidad_recibida=linea_pedido.cantidad_pendiente,
+                precio_unitario=linea_pedido.precio_unitario,
+                descuento_linea=linea_pedido.descuento_linea,
+                iva=linea_pedido.iva,
+            )
+
+        # Recalcular totales del albarán
+        albaran.recalcular_totales()
+
     def imprimir_albaran(self, request, pk):
         albaran = get_object_or_404(AlbaranCompra, pk=pk)
         return render_pdf("appcompras/pdf/albaran_compra.html", {"albaran": albaran})

@@ -626,6 +626,15 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         # Recalcular totales del albarán
         albaran.recalcular_totales()
 
+    def response_change(self, request, obj):
+        # Permanecer en la misma página después de guardar
+        if "_save" in request.POST:
+            return redirect(
+                reverse("admin:appcompras_albarancompra_change", args=[obj.pk])
+            )
+
+        return super().response_change(request, obj)
+
     def imprimir_albaran(self, request, pk):
         albaran = get_object_or_404(AlbaranCompra, pk=pk)
         return render_pdf("appcompras/pdf/albaran_compra.html", {"albaran": albaran})

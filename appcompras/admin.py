@@ -599,12 +599,6 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
 
         return form
 
-        albaran.estado = "CONFIRMADO"
-        albaran.save()
-
-        messages.success(request, "Recepción procesada correctamente.")
-        return redirect(reverse("admin:appcompras_albarancompra_change", args=[albaran_id]))
-
     def imprimir_albaran(self, request, pk):
         albaran = get_object_or_404(AlbaranCompra, pk=pk)
         return render_pdf("appcompras/pdf/albaran_compra.html", {"albaran": albaran})

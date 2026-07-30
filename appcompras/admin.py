@@ -555,6 +555,43 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
         for linea in albaran.lineas.all():
             servicio.procesar_linea_albaran(linea)
 
+    # ---------------------------------------------------------
+    # PARCHE: Capturar proveedor ANTES de construir el campo Pedido
+    # ---------------------------------------------------------
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+
+        # Caso 1: Albarán nuevo
+        if obj is None:
+            proveedor_id = None
+
+            # Si el usuario ya seleccionó proveedor
+            if request.method == "POST":
+                proveedor_id = request.POST.get("proveedor")
+            else:
+                proveedor_id = request.GET.get("proveedor")
+
+            # Si tenemos proveedor → filtrar pedidos
+            if proveedor_id:
+                form.base_fields["pedido"].queryset = PedidoCompra.objects.filter(
+                    proveedor_id=proveedor_id,
+                    estado__in=[PedidoCompra.BORRADOR, PedidoCompra.CONFIRMADO]
+                )
+            else:
+                form.base_fields["pedido"].queryset = PedidoCompra.objects.none()
+
+        # Caso 2: Albarán existente
+        else:
+            if obj.proveedor:
+                form.base_fields["pedido"].queryset = PedidoCompra.objects.filter(
+                    proveedor=obj.proveedor,
+                    estado__in=[PedidoCompra.BORRADOR, PedidoCompra.CONFIRMADO]
+                )
+            else:
+                form.base_fields["pedido"].queryset = PedidoCompra.objects.none()
+
+        return form
+
             # --- Integración del Servicio Central de Stock ---
             ServicioStock.incrementar_stock(
                 producto=linea.producto,

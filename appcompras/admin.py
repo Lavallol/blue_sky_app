@@ -114,7 +114,7 @@ class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     can_delete = True
 
     class Media:
-        js = ('admin/js/pedido_inline_fix.js',)
+        js = ('js/pedido_inline_fix.js',)
 
     readonly_fields = ('subtotal', 'iva_importe', 'total_linea')
 

@@ -94,8 +94,13 @@ class AlbaranCompraLineaForm(forms.ModelForm):
 class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     model = PedidoCompraLinea
     form = PedidoCompraLineaForm
-    extra = 1
+
+    extra = 0
+    min_num = 1
+    can_delete = True
+
     readonly_fields = ('subtotal', 'iva_importe', 'total_linea')
+
     fields = (
         'producto',
         'cantidad_pedida',
@@ -107,7 +112,6 @@ class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
         'iva_importe',
         'total_linea',
     )
-
 
 # ============================================================
 #   ADMIN DEL PEDIDO

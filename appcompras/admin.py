@@ -51,6 +51,11 @@ class PedidoCompraLineaForm(forms.ModelForm):
     def clean(self):
         cleaned = super().clean()
         producto = cleaned.get("producto")
+
+        # ← SOLUCIÓN: si no hay producto, no validar nada
+        if not producto:
+            return cleaned
+
         precio_unitario = cleaned.get("precio_unitario")
         iva = cleaned.get("iva")
 
@@ -61,7 +66,6 @@ class PedidoCompraLineaForm(forms.ModelForm):
             cleaned["iva"] = producto.iva.porcentaje if producto.iva else 21
 
         return cleaned
-
 
 class AlbaranCompraLineaForm(forms.ModelForm):
     class Meta:

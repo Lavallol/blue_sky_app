@@ -46,23 +46,37 @@ class LineaAutocompletableMixin:
 class PedidoCompraLineaForm(forms.ModelForm):
     class Meta:
         model = PedidoCompraLinea
-        fields = "__all__"
+        fields = (
+            'producto',
+            'cantidad_pedida',
+            'cantidad_recibida',
+            'precio_unitario',
+            'descuento_linea',
+            'iva',
+            'subtotal',
+            'iva_importe',
+            'total_linea',
+        )
+        widgets = {
+            'subtotal': forms.NumberInput(attrs={'readonly': 'readonly'}),
+            'iva_importe': forms.NumberInput(attrs={'readonly': 'readonly'}),
+            'total_linea': forms.NumberInput(attrs={'readonly': 'readonly'}),
+        }
 
     def clean(self):
         cleaned = super().clean()
         producto = cleaned.get("producto")
 
-        # ← SOLUCIÓN: si no hay producto, no validar nada
         if not producto:
             return cleaned
 
         precio_unitario = cleaned.get("precio_unitario")
         iva = cleaned.get("iva")
 
-        if producto and (precio_unitario is None or precio_unitario == 0):
+        if precio_unitario is None or precio_unitario == 0:
             cleaned["precio_unitario"] = producto.precio_compra
 
-        if producto and not iva:
+        if not iva:
             cleaned["iva"] = producto.iva.porcentaje if producto.iva else 21
 
         return cleaned

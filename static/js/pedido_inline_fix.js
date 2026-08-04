@@ -1,22 +1,19 @@
-function inicializar_autocompletado(row) {
-    row.querySelectorAll('input, select').forEach(input => {
-        input.dispatchEvent(new Event('input'));
-    });
-}
+console.log("pedido_inline_fix.js cargado correctamente");
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.body.addEventListener('change', function(e) {
-        if (e.target.name && e.target.name.includes('producto')) {
-            const form = e.target.closest('.dynamic-pedidocompralinea_set');
-            if (form) {
-                form.querySelectorAll('input, select').forEach(input => {
-                    input.dispatchEvent(new Event('input'));
-                });
-            }
-        }
-    });
-});
+django.jQuery(function($) {
 
-django.jQuery(document).on('formset:added', function(event, row) {
-    inicializar_autocompletado(row[0]);
+    function initSelect2(row) {
+        row.find('select.admin-autocomplete').each(function() {
+            $(this).djangoAdminSelect2();
+        });
+    }
+
+    // Inicializar las filas existentes
+    initSelect2($('.inline-group .form-row'));
+
+    // Inicializar las filas nuevas cuando se agregan
+    django.jQuery(document).on('formset:added', function(event, row) {
+        initSelect2(row);
+    });
+
 });

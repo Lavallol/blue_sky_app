@@ -154,7 +154,10 @@ class PedidoCompraAdmin(admin.ModelAdmin):
     )
 
     class Media:
-        js = ("appcompras/autocompletar_producto.js",)
+        js = (
+            "appcompras/autocompletar_producto.js",
+            "js/pedido_inline_fix.js",
+        )
 
     def generar_albaran(self, request, pedido_id):
         pedido = get_object_or_404(PedidoCompra, id=pedido_id)

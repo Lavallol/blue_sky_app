@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
         inicializarTodasLasFilas();
 
         document.body.addEventListener("click", function(e) {
-            if (e.target && e.target.classList.contains("add-row")) {
+            if (e.target && e.target.closest(".add-row")) {
                 setTimeout(inicializarTodasLasFilas, 200);
             }
         });

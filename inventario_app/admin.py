@@ -153,7 +153,7 @@ class ConteoSesionAdmin(admin.ModelAdmin):
 # ADMIN DE PRODUCTO (CON IMPORT/EXPORT EXCEL)
 # =========================================================
 @admin.register(Producto)
-class ProductoAdmin(ImportExportModelAdmin):
+class ProductoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     resource_class = ProductoResource
 

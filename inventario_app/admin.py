@@ -153,9 +153,12 @@ class ConteoSesionAdmin(admin.ModelAdmin):
 # ADMIN DE PRODUCTO (CON IMPORT/EXPORT EXCEL)
 # =========================================================
 @admin.register(Producto)
-class ProductoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class ProductoAdmin(ImportExportModelAdmin):
 
     resource_class = ProductoResource
+
+    # ⭐ CLAVE PARA ACTIVAR SELECT2 Y EL AUTOCOMPLETADO
+    autocomplete_fields = ['proveedor']
 
     list_display = (
         'nombre_interno',

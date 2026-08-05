@@ -156,11 +156,11 @@ class PedidoCompraAdmin(admin.ModelAdmin):
     class Media:
         css = {
             'all': (
-                'admin/css/vendor/select2/select2.css',
+                'admin/css/vendor/select2/select2.min.css',
             )
         }
         js = (
-            'admin/js/vendor/select2/select2.full.js',
+            'admin/js/vendor/select2/select2.full.min.js',
             'admin/js/autocomplete.js',
             "appcompras/autocompletar_producto.js",
             "js/pedido_inline_fix.js",

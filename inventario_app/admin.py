@@ -201,7 +201,7 @@ class ProductoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         return response
 
     # ⭐ CLAVE PARA ACTIVAR SELECT2 Y EL AUTOCOMPLETADO
-    autocomplete_fields = ()  # ← ESTA ES LA LÍNEA QUE FALTABA
+    autocomplete_fields = ['proveedor'] # ← ESTA ES LA LÍNEA QUE FALTABA
 
     list_filter = (
         'categoria',

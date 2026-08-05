@@ -1,42 +1,45 @@
-(function() {
+document.addEventListener("DOMContentLoaded", function() {
 
-    function inicializarFila(row) {
-        const selectProducto = row.querySelector('select[id$="-producto"]');
-        if (!selectProducto) return;
+    (function($) {
 
-        selectProducto.addEventListener("change", function() {
-            const productoId = this.value;
-            if (!productoId) return;
+        function inicializarFila(row) {
+            const selectProducto = row.querySelector('select[id$="-producto"]');
+            if (!selectProducto) return;
 
-            // URL REAL que sí existe en tu admin
-            const url = "/admin/appcompras/albarancompra/api/producto/" + productoId + "/";
+            selectProducto.addEventListener("change", function() {
+                const productoId = this.value;
+                if (!productoId) return;
 
-            fetch(url, { credentials: "same-origin" })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) return;
+                const url = "/admin/appcompras/albarancompra/api/producto/" + productoId + "/";
 
-                    const precioInput = row.querySelector('input[id$="-precio_unitario"]');
-                    const ivaInput = row.querySelector('input[id$="-iva"]');
+                fetch(url, { credentials: "same-origin" })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) return;
 
-                    if (precioInput) precioInput.value = data.precio;
-                    if (ivaInput) ivaInput.value = data.iva;
-                })
-                .catch(err => console.error("Error cargando producto:", err));
-        });
-    }
+                        const precioInput = row.querySelector('input[id$="-precio_unitario"]');
+                        const ivaInput = row.querySelector('input[id$="-iva"]');
 
-    function inicializarTodasLasFilas() {
-        const filas = document.querySelectorAll("table tbody tr");
-        filas.forEach(inicializarFila);
-    }
-
-    document.addEventListener("DOMContentLoaded", inicializarTodasLasFilas);
-
-    document.body.addEventListener("click", function(e) {
-        if (e.target && e.target.classList.contains("add-row")) {
-            setTimeout(inicializarTodasLasFilas, 200);
+                        if (precioInput) precioInput.value = data.precio;
+                        if (ivaInput) ivaInput.value = data.iva;
+                    })
+                    .catch(err => console.error("Error cargando producto:", err));
+            });
         }
-    });
 
-})();
+        function inicializarTodasLasFilas() {
+            const filas = document.querySelectorAll("table tbody tr");
+            filas.forEach(inicializarFila);
+        }
+
+        inicializarTodasLasFilas();
+
+        document.body.addEventListener("click", function(e) {
+            if (e.target && e.target.classList.contains("add-row")) {
+                setTimeout(inicializarTodasLasFilas, 200);
+            }
+        });
+
+    })(django.jQuery);
+
+});

@@ -111,7 +111,7 @@ class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
 
     autocomplete_fields = ['producto']   # ← ESTA ES LA LÍNEA NUEVA
 
-    extra = 0
+    extra = 1
     min_num = 1
     can_delete = True
 

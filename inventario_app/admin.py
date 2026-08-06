@@ -157,9 +157,6 @@ class ProductoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     resource_class = ProductoResource
 
-    # ⭐ CLAVE PARA ACTIVAR SELECT2 Y EL AUTOCOMPLETADO
-    autocomplete_fields = ['proveedor']
-
     list_display = (
         'nombre_interno',
         'codigo_interno',
@@ -179,6 +176,9 @@ class ProductoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         'codigo_barras',
         'nombre_proveedor',
     )
+
+    # ⭐ CLAVE PARA ACTIVAR SELECT2 Y EL AUTOCOMPLETADO
+    autocomplete_fields = ['categoria']
 
     def total_stock(self, obj):
         if obj.stock_actual is None or obj.precio_compra is None:
@@ -202,9 +202,6 @@ class ProductoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
             pass
 
         return response
-
-    # ⭐ CLAVE PARA ACTIVAR SELECT2 Y EL AUTOCOMPLETADO
-    autocomplete_fields = ['proveedor'] # ← ESTA ES LA LÍNEA QUE FALTABA
 
     list_filter = (
         'categoria',

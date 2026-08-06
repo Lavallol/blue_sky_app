@@ -105,11 +105,11 @@ class AlbaranCompraLineaForm(forms.ModelForm):
 #   INLINES DEL PEDIDO
 # ============================================================
 
-class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
+class PedidoCompraLineaInline(admin.TabularInline):
     model = PedidoCompraLinea
     form = PedidoCompraLineaForm
 
-    autocomplete_fields = ['producto']   # ← ESTA ES LA LÍNEA NUEVA
+    autocomplete_fields = ['producto']
 
     extra = 1
     min_num = 1
@@ -117,8 +117,7 @@ class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
 
     class Media:
         js = (
-            "appcompras/autocompletar_producto.js",
-            "js/pedido_inline_fix.js",
+            "appcompras/pedido_autocomplete.js",
         )
 
     readonly_fields = ('subtotal', 'iva_importe', 'total_linea')

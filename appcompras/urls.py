@@ -1,5 +1,3 @@
-# appcompras/urls.py
-
 from django.urls import path
 from . import views
 from . import views_api
@@ -8,14 +6,21 @@ from .views import api_producto_detalle
 app_name = "appcompras"
 
 urlpatterns = [
-    # Importación Excel (tu código original)
+    # Importación Excel
     path('importar_excel/', views.importar_excel, name='importar_excel'),
 
-    # API antigua que ya usabas (la mantenemos para compatibilidad)
-    path('api/producto/<int:producto_id>/', views_api.api_producto_info, name='api_producto_info'),
+    # ❌ ELIMINAR — API antigua que ya no existe
+    # path('api/producto/<int:producto_id>/', views_api.api_producto_info, name='api_producto_info'),
 
     # Endpoint universal para autocompletado (Pedido, Albarán, Factura)
     path('api/producto/detalle/<int:pk>/', api_producto_detalle, name='api_producto_detalle'),
+
+    # ⭐ Endpoint correcto para PedidoCompra
+    path(
+        'pedidocompra/api/producto/<int:producto_id>/',
+        views_api.api_producto_pedido,
+        name='api_producto_pedido'
+    ),
 
     # Vista del ERP para mostrar el albarán
     path('albaran/<int:albaran_id>/', views.ver_albaran, name='ver_albaran'),

@@ -155,16 +155,15 @@ class PedidoCompraAdmin(admin.ModelAdmin):
         'updated_at',
     )
 
-class Media:
-    css = {
-        'all': (
-            'admin/css/vendor/select2/select2.min.css',
+    class Media:
+        css = {
+            'all': (
+                'admin/css/vendor/select2/select2.min.css',
+            )
+        }
+        js = (
+            'admin/js/vendor/select2/select2.full.min.js',
         )
-    }
-    js = (
-        'admin/js/vendor/select2/select2.full.min.js',
-        'admin/js/autocomplete.js',
-    )
 
     def generar_albaran(self, request, pedido_id):
         pedido = get_object_or_404(PedidoCompra, id=pedido_id)

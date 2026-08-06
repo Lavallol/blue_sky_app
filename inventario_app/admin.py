@@ -243,6 +243,9 @@ class IVAAdmin(admin.ModelAdmin):
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ('nombre',)
 
+    # ⭐ Necesario para activar el endpoint de autocompletar
+    search_fields = ['nombre', 'descripcion']
+
 @admin.register(UnidadMedida)
 class UnidadMedidaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'abreviatura')

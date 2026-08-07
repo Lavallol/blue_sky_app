@@ -115,11 +115,6 @@ class PedidoCompraLineaInline(admin.TabularInline):
     min_num = 1
     can_delete = True
 
-    class Media:
-        js = (
-            "appcompras/js/pedido_autocomplete.js",
-        )
-
     readonly_fields = ('subtotal', 'iva_importe', 'total_linea')
 
     fields = (

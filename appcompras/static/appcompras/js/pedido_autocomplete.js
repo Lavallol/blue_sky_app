@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        // Llamada al endpoint
-        fetch(`/appcompras/api/producto/${productoId}/`)
+        // Llamada al endpoint CORREGIDA
+        fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
             .then(response => {
                 console.log("RESPUESTA API STATUS:", response.status);
                 return response.json();

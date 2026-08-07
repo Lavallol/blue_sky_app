@@ -117,7 +117,7 @@ class PedidoCompraLineaInline(admin.TabularInline):
 
     class Media:
         js = (
-            "appcompras/pedido_autocomplete.js",
+            "appcompras/js/pedido_autocomplete.js",
         )
 
     readonly_fields = ('subtotal', 'iva_importe', 'total_linea')

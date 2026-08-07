@@ -1,39 +1,47 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("PEDIDO JS CARGADO");
 
-    const inlines = document.querySelectorAll("tr.form-row");
-    console.log("FILAS ENCONTRADAS:", inlines.length);
+    // Delegación de eventos: funciona en todas las filas, incluso nuevas
+    document.addEventListener("change", function (e) {
 
-    inlines.forEach(inline => {
-        const productoSelect = inline.querySelector("select[id$='producto']");
-        const precioInput = inline.querySelector("input[id$='precio_unitario']");
-        const ivaInput = inline.querySelector("input[id$='iva']");
+        // Solo reaccionamos a selects cuyo ID termina en "producto"
+        if (!e.target.matches("select[id$='producto']")) return;
 
-        if (!productoSelect) return;
+        const productoSelect = e.target;
+        const productoId = productoSelect.value;
 
-        productoSelect.addEventListener("change", function () {
-            console.log("CAMBIO PRODUCTO, ID:", this.value);
+        console.log("CAMBIO PRODUCTO, ID:", productoId);
 
-            const productoId = this.value;
-            if (!productoId) return;
+        if (!productoId) return;
 
-            fetch(`/appcompras/api/producto/${productoId}/`)
-                .then(response => {
-                    console.log("RESPUESTA API STATUS:", response.status);
-                    return response.json();
-                })
-                .then(data => {
-                    console.log("DATA API:", data);
+        // Encontrar la fila del inline (TabularInline)
+        const fila = productoSelect.closest("tr");
+        if (!fila) {
+            console.log("No se encontró la fila del inline");
+            return;
+        }
 
-                    if (!data) return;
+        // Inputs dentro de la fila
+        const precioInput = fila.querySelector("input[id$='precio_unitario']");
+        const ivaInput = fila.querySelector("input[id$='iva']");
 
-                    // ✔ Autocompletar PRECIO
-                    if (precioInput) precioInput.value = data.precio ?? "";
+        // Llamada al endpoint
+        fetch(`/appcompras/api/producto/${productoId}/`)
+            .then(response => {
+                console.log("RESPUESTA API STATUS:", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("DATA API:", data);
 
-                    // ✔ Autocompletar IVA
-                    if (ivaInput) ivaInput.value = data.iva ?? "";
-                })
-                .catch(error => console.error("Error:", error));
-        });
+                if (!data) return;
+
+                // Autocompletar PRECIO
+                if (precioInput) precioInput.value = data.precio ?? "";
+
+                // Autocompletar IVA
+                if (ivaInput) ivaInput.value = data.iva ?? "";
+            })
+            .catch(error => console.error("Error:", error));
     });
 });

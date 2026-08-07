@@ -7,8 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     inlines.forEach(inline => {
         const productoSelect = inline.querySelector("select[id$='producto']");
         const precioInput = inline.querySelector("input[id$='precio_unitario']");
-        // Dejamos de tocar el IVA desde JS para evitar que desaparezca
-        // const ivaInput = inline.querySelector("input[id$='iva']");
+        const ivaInput = inline.querySelector("input[id$='iva']");
 
         if (!productoSelect) return;
 
@@ -28,12 +27,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     if (!data) return;
 
-                    // ✔ Autocompletamos solo el PRECIO
+                    // ✔ Autocompletar PRECIO
                     if (precioInput) precioInput.value = data.precio ?? "";
 
-                    // ❌ No tocamos el IVA aquí
-                    // Django Admin lo borra después del cambio
-                    // y tu modelo ya lo rellena correctamente al guardar
+                    // ✔ Autocompletar IVA
+                    if (ivaInput) ivaInput.value = data.iva ?? "";
                 })
                 .catch(error => console.error("Error:", error));
         });

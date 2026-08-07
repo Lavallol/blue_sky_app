@@ -163,6 +163,7 @@ class PedidoCompraAdmin(admin.ModelAdmin):
         }
         js = (
             'admin/js/vendor/select2/select2.full.min.js',
+            'appcompras/js/pedido_autocomplete.js',
         )
 
     def generar_albaran(self, request, pedido_id):

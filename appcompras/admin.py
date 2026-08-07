@@ -155,6 +155,25 @@ class PedidoCompraAdmin(admin.ModelAdmin):
         'updated_at',
     )
 
+    # 🟩 PEGAR AQUÍ EL MÉTODO
+    def api_producto(self, request, producto_id):
+        producto = Producto.objects.get(id=producto_id)
+        return JsonResponse({
+            "precio": float(producto.precio_compra),
+            "iva": producto.iva.porcentaje if producto.iva else 0,
+        })
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                'api/producto/<int:producto_id>/',
+                self.admin_site.admin_view(self.api_producto),
+                name='api_producto'
+            ),
+        ]
+        return custom_urls + urls
+
     class Media:
         css = {
             'all': (

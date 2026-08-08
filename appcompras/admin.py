@@ -100,7 +100,6 @@ class AlbaranCompraLineaForm(forms.ModelForm):
 
         return cleaned
 
-
 # ============================================================
 #   INLINES DEL PEDIDO
 # ============================================================
@@ -128,6 +127,9 @@ class PedidoCompraLineaInline(admin.TabularInline):
         'iva_importe',
         'total_linea',
     )
+
+    class Media:
+        js = ('appcompras/js/pedido_autocomplete.js',)
 
 # ============================================================
 #   ADMIN DEL PEDIDO

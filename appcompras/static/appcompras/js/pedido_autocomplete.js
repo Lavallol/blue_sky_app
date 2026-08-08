@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ============================================================
     // 🟩 SELECT2 — ESPERAR A QUE EL ADMIN INICIALICE EL WIDGET
     // ============================================================
-    django.jQuery(document).on("django:select2-init", "select.admin-autocomplete", function (e) {
+    django.jQuery(document).on("django:select2-init", "select[id$='producto']", function (e) {
 
         const selectElem = e.target;
 

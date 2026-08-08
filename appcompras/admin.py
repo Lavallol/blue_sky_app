@@ -158,16 +158,33 @@ class PedidoCompraAdmin(admin.ModelAdmin):
             "iva": producto.iva.porcentaje if producto.iva else 0,
         })
 
-    def get_urls(self):
-        urls = super().get_urls()
-        custom_urls = [
-            path(
-                'api/producto/<int:producto_id>/',
-                self.admin_site.admin_view(self.api_producto),
-                name='api_producto'
-            ),
-        ]
-        return custom_urls + urls
+def get_urls(self):
+    urls = super().get_urls()
+
+    custom_urls = [
+        # API producto
+        path(
+            'api/producto/<int:producto_id>/',
+            self.admin_site.admin_view(self.api_producto),
+            name='api_producto'
+        ),
+
+        # Generar albarán
+        path(
+            '<int:pedido_id>/generar-albaran/',
+            self.admin_site.admin_view(self.generar_albaran),
+            name='appcompras_pedidocompra_generar_albaran'
+        ),
+
+        # Imprimir pedido
+        path(
+            'imprimir/<int:pk>/',
+            self.admin_site.admin_view(self.imprimir_pedido),
+            name='appcompras_pedidocompra_imprimir'
+        ),
+    ]
+
+    return custom_urls + urls
 
     class Media:
         css = {
@@ -212,19 +229,6 @@ class PedidoCompraAdmin(admin.ModelAdmin):
 
         messages.success(request, f"Albarán {albaran.id} generado correctamente.")
         return redirect(reverse("admin:appcompras_albarancompra_change", args=[albaran.id]))
-
-    def get_urls(self):
-        urls = super().get_urls()
-        custom = [
-            path(
-                '<int:pedido_id>/generar-albaran/',
-                self.admin_site.admin_view(self.generar_albaran),
-                name='appcompras_pedidocompra_generar_albaran'
-            ),
-            path('imprimir/<int:pk>/', self.admin_site.admin_view(self.imprimir_pedido),
-                 name='appcompras_pedidocompra_imprimir'),
-        ]
-        return custom + urls
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         pedido = PedidoCompra.objects.get(id=object_id)

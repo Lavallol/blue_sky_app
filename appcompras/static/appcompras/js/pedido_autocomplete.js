@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ============================================================
     // 🟩 EVENTO REAL DEL ADMIN (AutocompleteSelect)
     // ============================================================
-    django.jQuery(document).on('django:autocomplete', "select[id$='producto']", function (e) {
+    django.jQuery(document).on('django:autocomplete', ".admin-autocomplete", function (e) {
         const productoId = this.value;
         console.log("CAMBIO PRODUCTO (AUTOCOMPLETE ADMIN), ID:", productoId);
 

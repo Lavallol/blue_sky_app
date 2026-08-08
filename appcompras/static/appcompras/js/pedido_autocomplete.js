@@ -2,11 +2,11 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("PEDIDO JS CARGADO");
 
     // ============================================================
-    // 🟩 EVENTO REAL DEL ADMIN (AutocompleteSelect)
+    // 🟩 EVENTO REAL DEL ADMIN (Select2 Autocomplete)
     // ============================================================
-    django.jQuery(document).on('django:autocomplete', ".admin-autocomplete", function (e) {
-        const productoId = this.value;
-        console.log("CAMBIO PRODUCTO (AUTOCOMPLETE ADMIN), ID:", productoId);
+    $(document).on('select2:select', "select.admin-autocomplete", function (e) {
+        const productoId = e.params.data.id;
+        console.log("CAMBIO PRODUCTO (SELECT2 ADMIN), ID:", productoId);
 
         if (!productoId) return;
 
@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ============================================================
-    // 🟩 LISTENER SELECT2 (queda como respaldo, no molesta)
+    // 🟩 LISTENER SELECT2 (respaldo, no molesta)
     // ============================================================
     $(document).on('select2:select', "select[id$='producto']", function (e) {
         const productoId = e.params.data.id;
-        console.log("CAMBIO PRODUCTO (SELECT2), ID:", productoId);
+        console.log("CAMBIO PRODUCTO (SELECT2 RESPALDO), ID:", productoId);
 
         if (!productoId) return;
 
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const productoSelect = e.target;
         const productoId = productoSelect.value;
 
-        console.log("CAMBIO PRODUCTO, ID:", productoId);
+        console.log("CAMBIO PRODUCTO (CHANGE), ID:", productoId);
 
         if (!productoId) return;
 

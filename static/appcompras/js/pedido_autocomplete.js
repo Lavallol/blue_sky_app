@@ -1,24 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("PEDIDO JS CARGADO");
 
-    const inlines = document.querySelectorAll("tr.form-row");
-    console.log("FILAS ENCONTRADAS:", inlines.length);
+    // ============================================================
+    // 🟩 SELECT2 — ESPERAR A QUE EL ADMIN INICIALICE EL WIDGET
+    // ============================================================
+    django.jQuery(document).on("django:select2-init", "select.admin-autocomplete", function (e) {
 
-    inlines.forEach(inline => {
-        const productoSelect = inline.querySelector("select[id$='producto']");
-        const precioInput = inline.querySelector("input[id$='precio_unitario']");
-        // Dejamos de tocar el IVA desde JS para evitar que desaparezca
-        // const ivaInput = inline.querySelector("input[id$='iva']");
+        const selectElem = e.target;
 
-        if (!productoSelect) return;
+        // Ahora que Select2 está inicializado, enganchamos el evento real
+        django.jQuery(selectElem).on("select2:select", function (ev) {
 
-        productoSelect.addEventListener("change", function () {
-            console.log("CAMBIO PRODUCTO, ID:", this.value);
+            const productoId = ev.params.data.id;
+            console.log("CAMBIO PRODUCTO (SELECT2 ADMIN INIT), ID:", productoId);
 
-            const productoId = this.value;
             if (!productoId) return;
 
-            fetch(`/appcompras/api/producto/${productoId}/`)
+            const fila = selectElem.closest("tr");
+            if (!fila) {
+                console.log("No se encontró la fila del inline");
+                return;
+            }
+
+            const precioInput = fila.querySelector("input[id$='precio_unitario']");
+            const ivaInput = fila.querySelector("input[id$='iva']");
+
+            fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
                 .then(response => {
                     console.log("RESPUESTA API STATUS:", response.status);
                     return response.json();
@@ -28,14 +35,83 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     if (!data) return;
 
-                    // ✔ Autocompletamos solo el PRECIO
                     if (precioInput) precioInput.value = data.precio ?? "";
-
-                    // ❌ No tocamos el IVA aquí
-                    // Django Admin lo borra después del cambio
-                    // y tu modelo ya lo rellena correctamente al guardar
+                    if (ivaInput) ivaInput.value = data.iva ?? "";
                 })
                 .catch(error => console.error("Error:", error));
         });
+    });
+
+    // ============================================================
+    // 🟩 LISTENER SELECT2 (respaldo)
+    // ============================================================
+    $(document).on('select2:select', "select[id$='producto']", function (e) {
+        const productoId = e.params.data.id;
+        console.log("CAMBIO PRODUCTO (SELECT2 RESPALDO), ID:", productoId);
+
+        if (!productoId) return;
+
+        const fila = this.closest("tr");
+        if (!fila) {
+            console.log("No se encontró la fila del inline");
+            return;
+        }
+
+        const precioInput = fila.querySelector("input[id$='precio_unitario']");
+        const ivaInput = fila.querySelector("input[id$='iva']");
+
+        fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
+            .then(response => {
+                console.log("RESPUESTA API STATUS:", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("DATA API:", data);
+
+                if (!data) return;
+
+                if (precioInput) precioInput.value = data.precio ?? "";
+                if (ivaInput) ivaInput.value = data.iva ?? "";
+            })
+            .catch(error => console.error("Error:", error));
+    });
+
+    // ============================================================
+    // 🟩 LISTENER ORIGINAL (change) — respaldo adicional
+    // ============================================================
+    document.addEventListener("change", function (e) {
+
+        if (!e.target.matches("select[id$='producto']")) return;
+
+        const productoSelect = e.target;
+        const productoId = productoSelect.value;
+
+        console.log("CAMBIO PRODUCTO (CHANGE), ID:", productoId);
+
+        if (!productoId) return;
+
+        const fila = productoSelect.closest("tr");
+        if (!fila) {
+            console.log("No se encontró la fila del inline");
+            return;
+        }
+
+        const precioInput = fila.querySelector("input[id$='precio_unitario']");
+        const ivaInput = fila.querySelector("input[id$='iva']");
+
+        fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
+            .then(response => {
+                console.log("RESPUESTA API STATUS:", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("DATA API:", data);
+
+                if (!data) return;
+
+                if (precioInput) precioInput.value = data.precio ?? "";
+                if (ivaInput) ivaInput.value = data.iva ?? "";
+            })
+            .catch(error => console.error("Error:", error));
     });
 });

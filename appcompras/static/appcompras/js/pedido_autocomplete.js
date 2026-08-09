@@ -78,6 +78,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ============================================================
+    // 🟩 LISTENER SELECT2 INVISIBLE — solución definitiva
+    // ============================================================
+    django.jQuery(document).on("change", ".select2-hidden-accessible", function () {
+
+        const productoId = django.jQuery(this).val();
+        console.log("CAMBIO PRODUCTO (INVISIBLE SELECT2), ID:", productoId);
+
+        if (!productoId) return;
+
+        const fila = this.closest("tr");
+        if (!fila) return;
+
+        const precioInput = fila.querySelector("input[id$='precio_unitario']");
+        const ivaInput = fila.querySelector("input[id$='iva']");
+
+        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`)
+            .then(r => r.json())
+            .then(data => {
+                if (precioInput) precioInput.value = data.precio ?? "";
+                if (ivaInput) ivaInput.value = data.iva ?? "";
+            })
+            .catch(err => console.error("Error:", err));
+    });
+
+    // ============================================================
     // 🟩 LISTENER ORIGINAL (change) — respaldo adicional
     // ============================================================
     document.addEventListener("change", function (e) {

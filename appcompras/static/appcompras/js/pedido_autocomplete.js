@@ -139,4 +139,31 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(error => console.error("Error:", error));
     });
+
+    // ============================================================
+    // 🟩 LISTENER DEFINITIVO — Autocomplete Django 6 (funciona siempre)
+    // ============================================================
+    django.jQuery(document).on("change", "input[id$='producto']", function () {
+
+        const productoId = django.jQuery(this).val();
+        console.log("CAMBIO PRODUCTO (ADMIN AUTOCOMPLETE REAL), ID:", productoId);
+
+        if (!productoId) return;
+
+        const fila = this.closest("tr");
+        if (!fila) return;
+
+        const precioInput = fila.querySelector("input[id$='precio_unitario']");
+        const ivaInput = fila.querySelector("input[id$='iva']");
+
+        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+            credentials: "same-origin"
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (precioInput) precioInput.value = data.precio ?? "";
+                if (ivaInput) ivaInput.value = data.iva ?? "";
+            })
+            .catch(err => console.error("Error:", err));
+});
 });

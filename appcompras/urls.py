@@ -17,7 +17,7 @@ urlpatterns = [
 
     # ⭐ Endpoint correcto para PedidoCompra
     path(
-        'pedidocompra/api/producto/<int:producto_id>/',
+        'api/pedidocompra/producto/<int:producto_id>/',
         views_api.api_producto_pedido,
         name='api_producto_pedido'
     ),

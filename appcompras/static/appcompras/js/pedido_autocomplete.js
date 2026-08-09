@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const precioInput = fila.querySelector("input[id$='precio_unitario']");
             const ivaInput = fila.querySelector("input[id$='iva']");
 
-            fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
+            fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`)
                 .then(response => {
                     console.log("RESPUESTA API STATUS:", response.status);
                     return response.json();
@@ -45,7 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // ============================================================
     // 🟩 LISTENER SELECT2 (respaldo)
     // ============================================================
-    django.jQuery(document).on('select2:select', "select[id$='producto']", function (e) {
+    django.jQuery(document).on('select2:select', "select[name$='producto']", function (e) {
+
         const productoId = e.params.data.id;
         console.log("CAMBIO PRODUCTO (SELECT2 RESPALDO), ID:", productoId);
 
@@ -81,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ============================================================
     document.addEventListener("change", function (e) {
 
-        if (!e.target.matches("select[id$='producto']")) return;
+        if (!e.target.matches("select[name$='producto']")) return;
 
         const productoSelect = e.target;
         const productoId = productoSelect.value;
@@ -99,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
+        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`)
             .then(response => {
                 console.log("RESPUESTA API STATUS:", response.status);
                 return response.json();

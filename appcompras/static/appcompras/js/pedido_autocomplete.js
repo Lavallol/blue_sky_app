@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
+        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`)
             .then(response => {
                 console.log("RESPUESTA API STATUS:", response.status);
                 return response.json();

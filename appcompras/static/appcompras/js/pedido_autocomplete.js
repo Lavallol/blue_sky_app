@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const precioInput = fila.querySelector("input[id$='precio_unitario']");
             const ivaInput = fila.querySelector("input[id$='iva']");
 
-            fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+            fetch(`/appcompras/api/pedidocompra/producto/${productoId}/`, {
                 credentials: "same-origin"
             })
                 .then(response => response.json())
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+        fetch(`/appcompras/api/pedidocompra/producto/${productoId}/`, {
             credentials: "same-origin"
         })
             .then(response => response.json())
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+        fetch(`/appcompras/api/pedidocompra/producto/${productoId}/`, {
             credentials: "same-origin"
         })
             .then(response => response.json())
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+        fetch(`/appcompras/api/pedidocompra/producto/${productoId}/`, {
             credentials: "same-origin"
         })
             .then(response => response.json())
@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+        fetch(`/appcompras/api/pedidocompra/producto/${productoId}/`, {
             credentials: "same-origin"
         })
             .then(r => r.json())
@@ -165,5 +165,5 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (ivaInput) ivaInput.value = data.iva ?? "";
             })
             .catch(err => console.error("Error:", err));
-});
+    });
 });

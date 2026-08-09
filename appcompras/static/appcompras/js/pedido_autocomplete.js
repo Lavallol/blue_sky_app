@@ -25,11 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const precioInput = fila.querySelector("input[id$='precio_unitario']");
             const ivaInput = fila.querySelector("input[id$='iva']");
 
-            fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`)
-                .then(response => {
-                    console.log("RESPUESTA API STATUS:", response.status);
-                    return response.json();
-                })
+            fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+                credentials: "same-origin"
+            })
+                .then(response => response.json())
                 .then(data => {
                     console.log("DATA API:", data);
 
@@ -61,11 +60,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`)
-            .then(response => {
-                console.log("RESPUESTA API STATUS:", response.status);
-                return response.json();
-            })
+        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+            credentials: "same-origin"
+        })
+            .then(response => response.json())
             .then(data => {
                 console.log("DATA API:", data);
 
@@ -93,8 +91,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`)
-            .then(r => r.json())
+        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+            credentials: "same-origin"
+        })
+            .then(response => response.json())
             .then(data => {
                 if (precioInput) precioInput.value = data.precio ?? "";
                 if (ivaInput) ivaInput.value = data.iva ?? "";
@@ -125,11 +125,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`)
-            .then(response => {
-                console.log("RESPUESTA API STATUS:", response.status);
-                return response.json();
-            })
+        fetch(`/appcompras/pedidocompra/api/producto/${productoId}/`, {
+            credentials: "same-origin"
+        })
+            .then(response => response.json())
             .then(data => {
                 console.log("DATA API:", data);
 

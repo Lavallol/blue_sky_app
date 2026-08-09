@@ -2,8 +2,6 @@ from django.http import JsonResponse
 from django.contrib.admin.views.decorators import staff_member_required
 from inventario_app.models import Producto
 
-
-@staff_member_required
 def api_producto_pedido(request, producto_id):
     """
     Devuelve precio e IVA del producto para autocompletar

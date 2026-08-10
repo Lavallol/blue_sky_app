@@ -1,58 +1,56 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("django:select2-init", function (e) {
 
-    const autocompletes = document.querySelectorAll('.admin-autocomplete');
+    const selectElem = e.target;
 
-    autocompletes.forEach(function (ac) {
+    if (!selectElem.matches("select.admin-autocomplete")) return;
 
-        ac.addEventListener('select2:select', function (e) {
+    django.jQuery(selectElem).on("select2:select", function (ev) {
 
-            const codigo = e.params.data.text;   // Select2 devuelve el código en .text
-            if (!codigo) return;
+        const productoId = ev.params.data.id;
+        if (!productoId) return;
 
-            fetch(`/inventario/buscar_producto_por_codigo?codigo=${codigo}`)
-                .then(response => response.json())
-                .then(data => {
+        const fila = selectElem.closest("tr");
+        if (!fila) return;
 
-                    if (!data.ok) return;
+        const precioInput = fila.querySelector('input[name$="precio_unitario"]');
+        const ivaInput = fila.querySelector('input[name$="iva"]');
 
-                    const row = ac.closest('.form-row');
-                    if (!row) return;
+        fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
+            .then(response => response.json())
+            .then(data => {
 
-                    const precioInput = row.querySelector('input[name$="precio_unitario"]');
-                    if (!precioInput) return;
+                if (precioInput) precioInput.value = data.precio ?? "";
+                if (ivaInput) ivaInput.value = data.iva ?? "";
 
-                    // Rellenar precio unitario
-                    precioInput.value = data.precio_coste;
+                // Recalcular total si ya hay cantidad
+                const cantidadInput = fila.querySelector('input[name$="cantidad_pedida"]');
+                const totalInput = fila.querySelector('input[name$="total_linea"]');
 
-                    // Recalcular total si ya hay cantidad
-                    const cantidadInput = row.querySelector('input[name$="cantidad_pedida"]');
-                    const totalInput = row.querySelector('input[name$="total_linea"]');
-
-                    if (cantidadInput && totalInput) {
-                        const cantidad = parseFloat(cantidadInput.value || "0");
-                        const precio = parseFloat(data.precio_coste || "0");
-                        totalInput.value = (cantidad * precio).toFixed(2);
-                    }
-                });
-        });
+                if (cantidadInput && totalInput) {
+                    const cantidad = parseFloat(cantidadInput.value || "0");
+                    const precio = parseFloat(precioInput.value || "0");
+                    totalInput.value = (cantidad * precio).toFixed(2);
+                }
+            });
     });
+});
 
-    // Escuchar cambios en Cantidad Pedida
-    document.addEventListener("input", function (e) {
 
-        if (!e.target.name || !e.target.name.endsWith("cantidad_pedida")) return;
+// Recalcular total cuando cambia la cantidad
+document.addEventListener("input", function (e) {
 
-        const row = e.target.closest('.form-row');
-        if (!row) return;
+    if (!e.target.name || !e.target.name.endsWith("cantidad_pedida")) return;
 
-        const precioInput = row.querySelector('input[name$="precio_unitario"]');
-        const totalInput = row.querySelector('input[name$="total_linea"]');
+    const fila = e.target.closest("tr");
+    if (!fila) return;
 
-        if (!precioInput || !totalInput) return;
+    const precioInput = fila.querySelector('input[name$="precio_unitario"]');
+    const totalInput = fila.querySelector('input[name$="total_linea"]');
 
-        const cantidad = parseFloat(e.target.value || "0");
-        const precio = parseFloat(precioInput.value || "0");
+    if (!precioInput || !totalInput) return;
 
-        totalInput.value = (cantidad * precio).toFixed(2);
-    });
+    const cantidad = parseFloat(e.target.value || "0");
+    const precio = parseFloat(precioInput.value || "0");
+
+    totalInput.value = (cantidad * precio).toFixed(2);
 });

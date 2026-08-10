@@ -152,6 +152,29 @@ class PedidoCompraAdmin(admin.ModelAdmin):
         'updated_at',
     )
 
+    def get_producto(self, request, pk):
+        producto = get_object_or_404(Producto, pk=pk)
+
+        data = {
+            "precio": float(producto.precio_compra),
+            "iva": producto.iva.porcentaje if producto.iva else 0,
+        }
+
+        return JsonResponse(data)
+
+    def get_urls(self):
+        urls = super().get_urls()
+
+        custom_urls = [
+            path(
+                'api/producto/<int:pk>/',
+                self.admin_site.admin_view(self.get_producto),
+                name='api_producto'
+            ),
+    ]
+
+        return custom_urls + urls
+
     # 🟩 PEGAR AQUÍ EL MÉTODO
     def api_producto(self, request, producto_id):
         producto = Producto.objects.get(id=producto_id)

@@ -129,7 +129,7 @@ class PedidoCompraLineaInline(admin.TabularInline):
     )
 
     class Media:
-        js = ('static/js/pedido_precio.js',)
+        js = ('js/pedido_precio.js',)
 
 # ============================================================
 #   ADMIN DEL PEDIDO
@@ -196,7 +196,7 @@ def get_urls(self):
         }
         js = (
             'admin/js/vendor/select2/select2.full.min.js',
-            'static/js/pedido_precio.js',
+            'js/pedido_precio.js',
         )
 
     def generar_albaran(self, request, pedido_id):

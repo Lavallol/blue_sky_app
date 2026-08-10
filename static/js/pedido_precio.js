@@ -1,4 +1,4 @@
-document.addEventListener("select2-init", function (e) {
+document.addEventListener("django-admin:init", function (e) {
 
     const selectElem = e.target;
 

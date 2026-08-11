@@ -104,13 +104,11 @@ class AlbaranCompraLineaForm(forms.ModelForm):
 #   INLINES DEL PEDIDO
 # ============================================================
 
-class PedidoCompraLineaInline(admin.TabularInline):
+class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     model = PedidoCompraLinea
-    # form = PedidoCompraLineaForm
+    form = PedidoCompraLineaForm
 
-    autocomplete_fields = ['producto']
-
-    extra = 20
+    extra = 1
     min_num = 1
     can_delete = True
 

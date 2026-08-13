@@ -107,6 +107,7 @@ class AlbaranCompraLineaForm(forms.ModelForm):
 class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     model = PedidoCompraLinea
     form = PedidoCompraLineaForm
+    autocomplete_fields = ['producto']
 
     extra = 1
     min_num = 1

@@ -1,10 +1,10 @@
-// Listener único con delegación real para Select2 en Django Admin
-document.addEventListener("django:select2-init", function (e) {
+// Django 6 usa "django-admin:init" para inicializar widgets
+document.addEventListener("django-admin:init", function (e) {
 
     const selectElem = e.target;
     if (!selectElem.matches("select.admin-autocomplete")) return;
 
-    // Listener para selección de producto
+    // Listener para Select2
     django.jQuery(selectElem).on("select2:select", function (ev) {
 
         const productoId = ev.params.data.id;

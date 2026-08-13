@@ -16,7 +16,8 @@ from .models.pedido import PedidoCompra, PedidoCompraLinea
 from .models.albaran import AlbaranCompra, AlbaranCompraLinea
 from .models.factura import FacturaCompra, FacturaCompraLinea
 from .models.condicion_pago import CondicionPago
-
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from inventario_app.servicios.servicio_procesar_recepcion import ServicioProcesarRecepcion
 from inventario_app.models import Producto
 from inventario_app.models import Proveedor

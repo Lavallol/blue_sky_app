@@ -174,6 +174,14 @@ class PedidoCompraAdmin(admin.ModelAdmin):
 
         return custom_urls + urls
 
+    def response_add(self, request, obj, post_url_continue=None):
+        return self.response_change(request, obj)
+
+    def response_change(self, request, obj):
+        return HttpResponseRedirect(
+            reverse('admin:appcompras_pedidocompra_change', args=[obj.pk])
+        )
+
     # 🟩 PEGAR AQUÍ EL MÉTODO
     def api_producto(self, request, producto_id):
         producto = Producto.objects.get(id=producto_id)

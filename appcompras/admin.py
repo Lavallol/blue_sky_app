@@ -196,12 +196,6 @@ class PedidoCompraAdmin(admin.ModelAdmin):
                 name='api_producto'
             ),
 
-            # Generar albarán
-            path(
-                '<int:pedido_id>/generar-albaran/',
-                self.admin_site.admin_view(self.generar_albaran),
-                name='appcompras_pedidocompra_generar_albaran'
-            ),
 
             # Imprimir pedido
             path(

@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django import forms
+from django.forms import Select
 from django.template.loader import render_to_string
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -21,7 +22,7 @@ from django.urls import reverse
 from inventario_app.servicios.servicio_procesar_recepcion import ServicioProcesarRecepcion
 from inventario_app.models import Producto
 from inventario_app.models import Proveedor
-
+from django.db import models
 
 #   FUNCIÓN GENERAL PARA RENDERIZAR PDF
 # ============================================================
@@ -129,7 +130,9 @@ class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     )
 
     class Media:
-        js = ('js/pedido_precio.js',)
+        js = (
+            'appcompras/pedido_autocomplete.js',
+        )
 
 # ============================================================
 #   ADMIN DEL PEDIDO
@@ -152,26 +155,61 @@ class PedidoCompraAdmin(admin.ModelAdmin):
         'updated_at',
     )
 
-    def get_producto(self, request, pk):
-        producto = get_object_or_404(Producto, pk=pk)
+    # API correcta para PedidoCompra
+    def api_producto(self, request, producto_id):
+        producto = Producto.objects.get(id=producto_id)
 
-        data = {
-            "precio": float(producto.precio_compra),
-            "iva": producto.iva.porcentaje if producto.iva else 0,
+        precio = float(producto.precio_compra)
+        iva = float(producto.iva.porcentaje) if producto.iva else 0.0
+
+        subtotal = precio
+        iva_importe = subtotal * (iva / 100.0)
+        total_linea = subtotal + iva_importe
+
+        return JsonResponse({
+            "precio": round(precio, 2),
+            "iva": round(iva, 2),
+            "subtotal": round(subtotal, 2),
+            "iva_importe": round(iva_importe, 2),
+            "total_linea": round(total_linea, 2),
+        })
+
+    def imprimir_pedido(self, request, pk):
+        pedido = get_object_or_404(PedidoCompra, pk=pk)
+
+        # Renderizar plantilla PDF o HTML
+        context = {
+            "pedido": pedido,
+            "lineas": pedido.lineas.all(),
         }
 
-        return JsonResponse(data)
+        return render(request, "appcompras/pedido_imprimir.html", context)
 
     def get_urls(self):
         urls = super().get_urls()
 
         custom_urls = [
+            # API producto
             path(
-                'api/producto/<int:pk>/',
-                self.admin_site.admin_view(self.get_producto),
+                'api/producto/<int:producto_id>/',
+                self.admin_site.admin_view(self.api_producto),
                 name='api_producto'
             ),
-    ]
+
+            # Generar albarán
+            path(
+                '<int:pedido_id>/generar-albaran/',
+                self.admin_site.admin_view(self.generar_albaran),
+                name='appcompras_pedidocompra_generar_albaran'
+            ),
+
+            # Imprimir pedido
+            path(
+                'imprimir/<int:pk>/',
+                self.admin_site.admin_view(self.imprimir_pedido),
+                name='appcompras_pedidocompra_imprimir'
+            ),
+        ]
 
         return custom_urls + urls
 
@@ -227,7 +265,7 @@ def get_urls(self):
         }
         js = (
             'admin/js/vendor/select2/select2.full.min.js',
-            'js/pedido_precio.js',
+            'appcompras/pedido_autocomplete.js',
         )
 
     def generar_albaran(self, request, pedido_id):

@@ -186,6 +186,29 @@ class PedidoCompraAdmin(admin.ModelAdmin):
 
         return custom_urls + urls
 
+# ============================================================
+#   ADMIN DE LA LÍNEA DEL PEDIDO (AUTOCOMPLETADO REAL)
+# ============================================================
+
+@admin.register(PedidoCompraLinea)
+class PedidoCompraLineaAdmin(admin.ModelAdmin):
+
+    search_fields = ['producto__nombre']
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super().get_search_results(request, queryset, search_term)
+        results = []
+        for linea in queryset:
+            producto = linea.producto
+            results.append({
+                "id": producto.id,
+                "text": str(producto),
+                "precio_unitario": float(producto.precio_compra),
+                "iva": producto.iva.porcentaje if producto.iva else 0,
+            })
+        return results, use_distinct
+
+
     # 🟩 PEGAR AQUÍ EL MÉTODO
     def api_producto(self, request, producto_id):
         producto = Producto.objects.get(id=producto_id)

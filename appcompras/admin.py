@@ -110,7 +110,7 @@ class PedidoCompraLineaInline(admin.TabularInline):
 
     autocomplete_fields = ['producto']
 
-    extra = 1
+    extra = 20
     min_num = 1
     can_delete = True
 

@@ -217,33 +217,33 @@ class PedidoCompraLineaAdmin(admin.ModelAdmin):
             "iva": producto.iva.porcentaje if producto.iva else 0,
         })
 
-def get_urls(self):
-    urls = super().get_urls()
+    def get_urls(self):
+        urls = super().get_urls()
 
-    custom_urls = [
-        # API producto
-        path(
-            'api/producto/<int:producto_id>/',
-            self.admin_site.admin_view(self.api_producto),
-            name='api_producto'
-        ),
+        custom_urls = [
+            # API producto
+            path(
+                'api/producto/<int:producto_id>/',
+                self.admin_site.admin_view(self.api_producto),
+                name='api_producto'
+            ),
 
-        # Generar albarán
-        path(
-            '<int:pedido_id>/generar-albaran/',
-            self.admin_site.admin_view(self.generar_albaran),
-            name='appcompras_pedidocompra_generar_albaran'
-        ),
+            # Generar albarán
+            path(
+                '<int:pedido_id>/generar-albaran/',
+                self.admin_site.admin_view(self.generar_albaran),
+                name='appcompras_pedidocompra_generar_albaran'
+            ),
 
-        # Imprimir pedido
-        path(
-            'imprimir/<int:pk>/',
-            self.admin_site.admin_view(self.imprimir_pedido),
-            name='appcompras_pedidocompra_imprimir'
-        ),
-    ]
+            # Imprimir pedido
+            path(
+                'imprimir/<int:pk>/',
+                self.admin_site.admin_view(self.imprimir_pedido),
+                name='appcompras_pedidocompra_imprimir'
+            ),
+        ]
 
-    return custom_urls + urls
+        return custom_urls + urls
 
     class Media:
         css = {

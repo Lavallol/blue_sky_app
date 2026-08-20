@@ -533,7 +533,7 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
                 linea.producto.stock += linea.cantidad_pedida
                 linea.producto.save()
 
-            pedido.estado = "CERRADO"
+            pedido.estado = PedidoCompra.CERRADO
             pedido.save()
 
             messages.success(request, f"Líneas copiadas y Pedido {pedido.id} cerrado.")

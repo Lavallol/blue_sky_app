@@ -818,7 +818,7 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
                 linea.producto.stock_actual += linea.cantidad_pedida
                 linea.producto.save()
 
-            obj.pedido.estado = "CERRADO"
+            obj.pedido.estado = PedidoCompra.CERRADO
             obj.pedido.save()
 
 # ============================================================

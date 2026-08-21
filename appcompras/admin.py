@@ -582,6 +582,15 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
 
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+
+        obj = form.instance
+
+        if obj.pedido:
+            obj.pedido.estado = PedidoCompra.CERRADO
+            obj.pedido.save()
+
     def render_lineas_pedido_visual(self, obj):
         """
         Renderiza un bloque visual con las líneas del Pedido seleccionado.

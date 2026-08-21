@@ -467,6 +467,7 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Datos del Albarán", {
             "fields": (
+                "numero_albaran",
                 "proveedor",
                 "fecha_recepcion",
                 "estado",

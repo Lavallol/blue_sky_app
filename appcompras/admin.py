@@ -558,7 +558,7 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
                 kwargs["queryset"] = PedidoCompra.objects.filter(
                     proveedor=albaran.proveedor,
                     estado__in=[PedidoCompra.BORRADOR, PedidoCompra.CONFIRMADO]
-                ).exclude(albarancompra__isnull=False)
+                ).exclude(albaranes__isnull=False)
             else:
                 # Caso 2: Creando un albarán nuevo
                 proveedor_id = None
@@ -577,7 +577,7 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
                     kwargs["queryset"] = PedidoCompra.objects.filter(
                         proveedor_id=proveedor_id,
                         estado__in=[PedidoCompra.BORRADOR, PedidoCompra.CONFIRMADO]
-                    ).exclude(albarancompra__isnull=False)
+                    ).exclude(albaranes__isnull=False)
                 else:
                     kwargs["queryset"] = PedidoCompra.objects.none()
 

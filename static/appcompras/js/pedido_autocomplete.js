@@ -25,20 +25,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const precioInput = fila.querySelector("input[id$='precio_unitario']");
             const ivaInput = fila.querySelector("input[id$='iva']");
 
-            const data = ev.params.data;   // ⭐ REEMPLAZO LÍNEA 28 ⭐
-                .then(response => {
-                    console.log("RESPUESTA API STATUS:", response.status);
-                    return response.json();
-                })
-                .then(data => {
-                    console.log("DATA API:", data);
+            // ⭐ LÍNEA 28 CORREGIDA ⭐
+            const data = ev.params.data;
 
-                    if (!data) return;
+            if (!data) return;
 
-                    if (precioInput) precioInput.value = data.precio ?? "";
-                    if (ivaInput) ivaInput.value = data.iva ?? "";
-                })
-                .catch(error => console.error("Error:", error));
+            if (precioInput) precioInput.value = data.precio ?? "";
+            if (ivaInput) ivaInput.value = data.iva ?? "";
         });
     });
 
@@ -60,20 +53,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        const data = e.params.data;   // ⭐ REEMPLAZO LÍNEA 63 ⭐
-            .then(response => {
-                console.log("RESPUESTA API STATUS:", response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log("DATA API:", data);
+        // ⭐ LÍNEA 63 CORREGIDA ⭐
+        const data = e.params.data;
 
-                if (!data) return;
+        if (!data) return;
 
-                if (precioInput) precioInput.value = data.precio ?? "";
-                if (ivaInput) ivaInput.value = data.iva ?? "";
-            })
-            .catch(error => console.error("Error:", error));
+        if (precioInput) precioInput.value = data.precio ?? "";
+        if (ivaInput) ivaInput.value = data.iva ?? "";
     });
 
     // ============================================================
@@ -99,19 +85,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        const data = { precio: productoSelect.dataset.precio, iva: productoSelect.dataset.iva };   // ⭐ REEMPLAZO LÍNEA 102 ⭐
-            .then(response => {
-                console.log("RESPUESTA API STATUS:", response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log("DATA API:", data);
+        // ⭐ LÍNEA 102 CORREGIDA ⭐
+        const data = {
+            precio: productoSelect.dataset.precio,
+            iva: productoSelect.dataset.iva
+        };
 
-                if (!data) return;
+        if (!data) return;
 
-                if (precioInput) precioInput.value = data.precio ?? "";
-                if (ivaInput) ivaInput.value = data.iva ?? "";
-            })
-            .catch(error => console.error("Error:", error));
+        if (precioInput) precioInput.value = data.precio ?? "";
+        if (ivaInput) ivaInput.value = data.iva ?? "";
     });
 });

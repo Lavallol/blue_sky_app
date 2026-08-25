@@ -190,8 +190,8 @@ class PedidoCompraAdmin(admin.ModelAdmin):
 #   ADMIN DE LA LÍNEA DEL PEDIDO (AUTOCOMPLETADO REAL)
 # ============================================================
 
-@admin.register(PedidoCompraLinea)
-class PedidoCompraLineaAdmin(admin.ModelAdmin):
+# @admin.register(PedidoCompraLinea)
+# class PedidoCompraLineaAdmin(admin.ModelAdmin):
 
     search_fields = ['producto__nombre']
 

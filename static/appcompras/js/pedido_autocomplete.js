@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const precioInput = fila.querySelector("input[id$='precio_unitario']");
             const ivaInput = fila.querySelector("input[id$='iva']");
 
-            fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
+            const data = ev.params.data;   // ⭐ REEMPLAZO LÍNEA 28 ⭐
                 .then(response => {
                     console.log("RESPUESTA API STATUS:", response.status);
                     return response.json();
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
+        const data = e.params.data;   // ⭐ REEMPLAZO LÍNEA 63 ⭐
             .then(response => {
                 console.log("RESPUESTA API STATUS:", response.status);
                 return response.json();
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const precioInput = fila.querySelector("input[id$='precio_unitario']");
         const ivaInput = fila.querySelector("input[id$='iva']");
 
-        fetch(`/admin/appcompras/pedidocompra/api/producto/${productoId}/`)
+        const data = { precio: productoSelect.dataset.precio, iva: productoSelect.dataset.iva };   // ⭐ REEMPLAZO LÍNEA 102 ⭐
             .then(response => {
                 console.log("RESPUESTA API STATUS:", response.status);
                 return response.json();

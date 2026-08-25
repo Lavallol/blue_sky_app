@@ -107,6 +107,7 @@ class AlbaranCompraLineaForm(forms.ModelForm):
 class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     model = PedidoCompraLinea
     form = PedidoCompraLineaForm
+    autocomplete_fields = ['producto']   # ← ESTA LÍNEA ES IMPRESCINDIBLE
 
     extra = 20
     min_num = 1
@@ -140,7 +141,10 @@ class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
         return results, use_distinct
 
     class Media:
-        js = ('js/pedido_precio.js',)
+        js = (
+            'admin/js/vendor/select2/select2.full.min.js',
+            'appcompras/js/pedido_autocomplete.js',   # ← JS CORRECTO
+        )
 
 # ============================================================
 #   ADMIN DEL PEDIDO

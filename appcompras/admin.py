@@ -135,7 +135,7 @@ class PedidoCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
             results.append({
                 "id": producto.id,
                 "text": str(producto),
-                "precio_unitario": producto.precio_compra,
+                "precio": producto.precio_compra,
                 "iva": producto.iva.porcentaje,
             })
         return results, use_distinct

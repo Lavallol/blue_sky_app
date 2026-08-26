@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (!data) return;
 
-                if (precioInput) precioInput.value = data.precio ?? "";
+                if (precioInput) precioInput.value = data.precio_unitario ?? "";
                 if (ivaInput) ivaInput.value = data.iva ?? "";
             })
             .catch(err => console.error("Error:", err));

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, reverse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django import forms
 from django.template.loader import render_to_string
 from django.utils.html import format_html

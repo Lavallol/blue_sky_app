@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("PEDIDO JS CARGADO — Listener Django 6 activo");
 
-    django.jQuery(document).on("change", "select[data-autocomplete-light-function]", function () {
+    django.jQuery(document).on("change", ".autocomplete-light-widget", function () {
 
         const productoId = django.jQuery(this).val();
         console.log("CAMBIO PRODUCTO (ADMIN AUTOCOMPLETE REAL), ID:", productoId);

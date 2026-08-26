@@ -190,6 +190,12 @@ class PedidoCompraAdmin(admin.ModelAdmin):
 
         return custom_urls + urls
 
+    def response_change(self, request, obj):
+        return HttpResponseRedirect(request.path)
+
+    def response_add(self, request, obj, post_url_continue=None):
+        return HttpResponseRedirect(request.path)
+
 # ============================================================
 #   ADMIN DE LA LÍNEA DEL PEDIDO (AUTOCOMPLETADO REAL)
 # ============================================================

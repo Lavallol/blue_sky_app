@@ -163,7 +163,7 @@ class PedidoCompraLinea(models.Model):
     # -----------------------------
     def save(self, *args, **kwargs):
 
-        if not self.precio_unitario:
+        if self.producto and (self.precio_unitario is None or self.precio_unitario == 0):
             self.precio_unitario = self.producto.precio_compra
 
         # 1) Tomar SIEMPRE el IVA del producto (aunque sea 0%)

@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ============================================================
     // 🟩 LISTENER SELECT2 (respaldo)
     // ============================================================
-    $(document).on('select2:select', "select[id$='producto']", function (e) {
+    django.jQuery(document).on('select2:select', "select[id$='producto']", function (e) {
         const productoId = e.params.data.id;
         console.log("CAMBIO PRODUCTO (SELECT2 RESPALDO), ID:", productoId);
 

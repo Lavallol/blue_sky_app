@@ -880,12 +880,18 @@ class AlbaranCompraLineaInlineFactura(admin.TabularInline):
     numero_albaran.short_description = "Número Albarán"
     subtotal_linea.short_description = "Subtotal"
 
+def subtotal_factura(obj):
+    cantidad = obj.cantidad or 0
+    precio = obj.precio_unitario or 0
+    descuento = obj.importe_descuento or 0
+    return (cantidad * precio) - descuento
+
 class FacturaCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     model = FacturaCompraLinea
     extra = 1
 
     readonly_fields = (
-        'subtotal',
+        'subtotal_factura',
         'importe_impuestos',
         'total',
     )
@@ -895,19 +901,12 @@ class FacturaCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
         'cantidad',
         'precio_unitario',
         'importe_descuento',
-        'subtotal',
+        'subtotal_factura',
         'iva',
         'importe_impuestos',
         'total',
     )
 
-    def subtotal(self, obj):
-        cantidad = obj.cantidad or 0
-        precio = obj.precio_unitario or 0
-        descuento = obj.importe_descuento or 0
-        return (cantidad * precio) - descuento
-
-    subtotal.short_description = "Subtotal"
 
 # ============================================================
 #   INLINE PARA ASOCIAR ALBARANES A FACTURA (ManyToMany)

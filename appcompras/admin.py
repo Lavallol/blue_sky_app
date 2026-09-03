@@ -944,14 +944,32 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
     inlines = [AlbaranEnFacturaInline, FacturaCompraLineaInline]
 
+    def subtotal_global(self, obj):
+        return sum([
+            (linea.cantidad or 0) * (linea.precio_unitario or 0) - (linea.importe_descuento or 0)
+            for linea in obj.facturacompralinea_set.all()
+        ])
+    subtotal_global.short_description = "Importe subtotal"
+
+    def impuestos_global(self, obj):
+        return sum([
+            linea.importe_impuestos or 0
+            for linea in obj.facturacompralinea_set.all()
+        ])
+    impuestos_global.short_description = "Importe impuestos"
+
+    def total_global(self, obj):
+        return self.subtotal_global(obj) + self.impuestos_global(obj)
+    total_global.short_description = "Total"
+
     # Ocultamos el ManyToMany crudo, lo gestionamos solo por inline
     exclude = ('albaranes',)
 
     # Campo de totales + tabla profesional de albaranes
     readonly_fields = (
-        'importe_subtotal',
-        'importe_impuestos',
-        'total',
+        'subtotal_global',
+        'impuestos_global',
+        'total_global',
         'tabla_albaranes',
     )
 

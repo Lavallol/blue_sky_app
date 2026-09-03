@@ -902,7 +902,10 @@ class FacturaCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     )
 
     def subtotal(self, obj):
-        return (obj.cantidad * obj.precio_unitario) - obj.importe_descuento
+        cantidad = obj.cantidad or 0
+        precio = obj.precio_unitario or 0
+        descuento = obj.importe_descuento or 0
+        return (cantidad * precio) - descuento
 
     subtotal.short_description = "Subtotal"
 

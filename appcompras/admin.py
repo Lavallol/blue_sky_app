@@ -845,6 +845,41 @@ class AlbaranCompraAdmin(admin.ModelAdmin):
 #   INLINES DE LA FACTURA
 # ============================================================
 
+class AlbaranCompraLineaInlineFactura(admin.TabularInline):
+    model = AlbaranCompraLinea
+    extra = 0
+    can_delete = False
+    verbose_name = "Línea del albarán asociado"
+    verbose_name_plural = "Líneas de albaranes asociados"
+
+    readonly_fields = (
+        'fecha_albaran',
+        'numero_albaran',
+        'producto',
+        'cantidad_recibida',
+        'precio_unitario',
+        'descuento_linea',
+        'subtotal_linea',
+        'iva',
+        'importe_iva',
+        'total_linea_con_iva',
+    )
+
+    fields = readonly_fields
+
+    def fecha_albaran(self, obj):
+        return obj.albaran.fecha_recepcion
+
+    def numero_albaran(self, obj):
+        return obj.albaran.numero_albaran
+
+    def subtotal_linea(self, obj):
+        return obj.subtotal
+
+    fecha_albaran.short_description = "Fecha Albarán"
+    numero_albaran.short_description = "Número Albarán"
+    subtotal_linea.short_description = "Subtotal"
+
 class FacturaCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     model = FacturaCompraLinea
     extra = 1

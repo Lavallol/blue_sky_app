@@ -901,6 +901,40 @@ class FacturaCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
         'total',
     )
 
+class AlbaranCompraLineaInline(admin.TabularInline):
+    model = AlbaranCompraLinea
+    extra = 0
+    can_delete = False
+    show_change_link = True
+
+    fields = (
+        'numero_albaran',
+        'fecha_albaran',
+        'producto',
+        'cantidad_recibida',
+        'precio_unitario',
+        'descuento_linea',
+        'subtotal_linea',
+        'iva',
+        'importe_iva',
+        'total_linea_con_iva',
+    )
+
+    readonly_fields = fields
+
+    def numero_albaran(self, obj):
+        return obj.albaran.numero_albaran if obj.albaran else None
+
+    def fecha_albaran(self, obj):
+        return obj.albaran.fecha_recepcion if obj.albaran else None
+
+    def subtotal_linea(self, obj):
+        return obj.subtotal
+
+    numero_albaran.short_description = "Número Albarán"
+    fecha_albaran.short_description = "Fecha Albarán"
+    subtotal_linea.short_description = "Subtotal"
+
     def subtotal_factura(self, obj):
         cantidad = obj.cantidad or 0
         precio = obj.precio_unitario or 0

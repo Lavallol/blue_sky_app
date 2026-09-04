@@ -1000,7 +1000,7 @@ class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
 #   INLINE DEL MODELO INTERMEDIO + LÍNEAS DEL ALBARÁN
 # ============================================================
 class AlbaranAsociadoInline(admin.TabularInline):
-    model = FacturaCompra_albaranes
+    model = FacturaCompra.albaranes.through
     extra = 0
     can_delete = True
     show_change_link = True

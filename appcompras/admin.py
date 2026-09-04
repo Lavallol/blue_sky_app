@@ -16,7 +16,6 @@ from .models.pedido import PedidoCompra, PedidoCompraLinea
 from .models.albaran import AlbaranCompra, AlbaranCompraLinea
 from .models.factura import FacturaCompra, FacturaCompraLinea
 from .models.condicion_pago import CondicionPago
-from .models.factura import FacturaCompra_albaranes
 
 from inventario_app.servicios.servicio_procesar_recepcion import ServicioProcesarRecepcion
 from inventario_app.models import Producto

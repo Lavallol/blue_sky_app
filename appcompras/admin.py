@@ -908,8 +908,8 @@ class AlbaranCompraLineaInline(admin.TabularInline):
     show_change_link = True
 
     fields = (
-        'numero_albaran',
         'fecha_albaran',
+        'numero_albaran',
         'producto',
         'cantidad_recibida',
         'precio_unitario',
@@ -922,17 +922,17 @@ class AlbaranCompraLineaInline(admin.TabularInline):
 
     readonly_fields = fields
 
-    def numero_albaran(self, obj):
-        return obj.albaran.numero_albaran if obj.albaran else None
-
     def fecha_albaran(self, obj):
         return obj.albaran.fecha_recepcion if obj.albaran else None
+
+    def numero_albaran(self, obj):
+        return obj.albaran.numero_albaran if obj.albaran else None
 
     def subtotal_linea(self, obj):
         return obj.subtotal
 
-    numero_albaran.short_description = "Número Albarán"
     fecha_albaran.short_description = "Fecha Albarán"
+    numero_albaran.short_description = "Número Albarán"
     subtotal_linea.short_description = "Subtotal"
 
     def subtotal_factura(self, obj):

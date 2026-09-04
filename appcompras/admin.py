@@ -965,6 +965,36 @@ class AlbaranEnFacturaInline(admin.TabularInline):
                     )
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+# ============================================================
+#   INLINE PARA MOSTRAR LÍNEAS DE ALBARÁN EN LA FACTURA
+# ============================================================
+
+class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
+    model = AlbaranCompraLinea
+    extra = 0
+    can_delete = False
+    show_change_link = False
+
+    fields = (
+        'fecha_albaran',
+        'numero_albaran',
+        'producto',
+        'cantidad_recibida',
+        'precio_unitario',
+        'descuento_linea',
+        'subtotal_linea',
+        'iva',
+        'importe_iva',
+        'total_linea_con_iva',
+    )
+
+    readonly_fields = fields
+
+    def fecha_albaran(self, obj):
+        return obj.albaran.fecha_recepcion if obj.albaran else None
+
+    def numero_albaran(self, obj):
+        return obj.albaran.numero_albaran if obj.albaran else None
 
 # ============================================================
 #   ADMIN DE FACTURA
@@ -976,7 +1006,11 @@ class FacturaCompraAdmin(admin.ModelAdmin):
     list_filter = ('estado_factura', 'proveedor', 'fecha_factura')
     search_fields = ('id', 'proveedor__nombre')
 
-    inlines = [AlbaranEnFacturaInline, FacturaCompraLineaInline]
+    inlines = [
+        AlbaranEnFacturaInline,
+        LineasDeAlbaranEnFacturaInline,
+        FacturaCompraLineaInline,
+    ]
 
     def subtotal_global(self, obj):
         return sum([

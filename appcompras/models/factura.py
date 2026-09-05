@@ -49,7 +49,6 @@ class FacturaCompra(models.Model):
     # ============================================================
     albaranes = models.ManyToManyField(
     AlbaranCompra,
-    through='FacturaCompraAlbaran',
     related_name='facturas_asociadas',
     blank=True
     )

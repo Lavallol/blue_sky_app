@@ -1063,6 +1063,26 @@ class FacturaCompraAlbaranInline(admin.TabularInline):
     model = FacturaCompraAlbaran
     extra = 0
 
+    fields = (
+        'albaran_numero',
+        'albaran_fecha',
+        'albaran_estado',
+        'albaran_importe',
+    )
+    readonly_fields = fields
+
+    def albaran_numero(self, obj):
+        return obj.albaran.numero_albaran
+
+    def albaran_fecha(self, obj):
+        return obj.albaran.fecha_albaran
+
+    def albaran_estado(self, obj):
+        return obj.albaran.estado
+
+    def albaran_importe(self, obj):
+        return obj.albaran.importe_total
+
 @admin.register(FacturaCompra)
 class FacturaCompraAdmin(admin.ModelAdmin):
     list_display = ('id', 'proveedor', 'fecha_factura', 'estado_factura', 'total')

@@ -1054,6 +1054,14 @@ class AlbaranAsociadoInline(admin.TabularInline):
 #   ADMIN DE FACTURA
 # ============================================================
 
+# ============================================================
+#   INLINE PROFESIONAL MEFIE
+# ============================================================
+
+class FacturaCompraAlbaranInline(admin.TabularInline):
+    model = FacturaCompraAlbaran
+    extra = 0
+
 @admin.register(FacturaCompra)
 class FacturaCompraAdmin(admin.ModelAdmin):
     list_display = ('id', 'proveedor', 'fecha_factura', 'estado_factura', 'total')

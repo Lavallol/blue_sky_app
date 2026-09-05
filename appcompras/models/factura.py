@@ -48,9 +48,10 @@ class FacturaCompra(models.Model):
     #   RELACIÓN PROFESIONAL PARA OCR Y FACTURAS AGRUPADAS
     # ============================================================
     albaranes = models.ManyToManyField(
-        AlbaranCompra,
-        related_name="facturas_asociadas",
-        blank=True
+    AlbaranCompra,
+    through='FacturaCompraAlbaran',
+    related_name='facturas_asociadas',
+    blank=True
     )
 
     class Meta:

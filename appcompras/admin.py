@@ -1061,8 +1061,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
     search_fields = ('id', 'proveedor__nombre')
 
     inlines = [
-        AlbaranEnFacturaInline,
-        AlbaranAsociadoInline,
+        FacturaCompraAlbaranInline,
         FacturaCompraLineaInline,
     ]
 

@@ -1064,12 +1064,17 @@ class FacturaCompraAlbaranInline(admin.TabularInline):
     extra = 0
 
     fields = (
+        'albaran',            # ⭐ selector → imprescindible
         'albaran_numero',
         'albaran_fecha',
-        'albaran_estado',
         'albaran_importe',
     )
-    readonly_fields = fields
+
+    readonly_fields = (
+        'albaran_numero',
+        'albaran_fecha',
+        'albaran_importe',
+    )
 
     def albaran_numero(self, obj):
         return obj.albaran.numero_albaran
@@ -1077,11 +1082,14 @@ class FacturaCompraAlbaranInline(admin.TabularInline):
     def albaran_fecha(self, obj):
         return obj.albaran.fecha_albaran
 
-    def albaran_estado(self, obj):
-        return obj.albaran.estado
-
     def albaran_importe(self, obj):
         return obj.albaran.importe_total
+
+    # ⭐ Solo mostrar albaranes CONFIRMADOS
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "albaran":
+            kwargs["queryset"] = AlbaranCompra.objects.filter(estado="CONFIRMADO")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 @admin.register(FacturaCompra)
 class FacturaCompraAdmin(admin.ModelAdmin):

@@ -15,6 +15,7 @@ from datetime import date
 from .models.pedido import PedidoCompra, PedidoCompraLinea
 from .models.albaran import AlbaranCompra, AlbaranCompraLinea
 from .models.factura import FacturaCompra, FacturaCompraLinea
+from .models.factura import FacturaCompraAlbaran
 from .models.condicion_pago import CondicionPago
 
 from inventario_app.servicios.servicio_procesar_recepcion import ServicioProcesarRecepcion

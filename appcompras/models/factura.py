@@ -117,6 +117,12 @@ class FacturaCompraLinea(models.Model):
     importe_impuestos = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=8, decimal_places=2, default=0)
 
+    # ============================================================
+    #   TRAZABILIDAD DEL ALBARÁN
+    # ============================================================
+    fecha_albaran = models.DateField(null=True, blank=True)
+    numero_albaran = models.CharField(max_length=50, null=True, blank=True)
+
     def __str__(self):
         return f"{self.producto.nombre_interno} x {self.cantidad}"
 

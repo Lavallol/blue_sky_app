@@ -314,7 +314,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
     list_display = ('id', 'proveedor', 'fecha_factura', 'estado_factura', 'total')
     list_filter = ('estado_factura', 'proveedor', 'fecha_factura')
     search_fields = ('id', 'proveedor__nombre')
-    inlines = [FacturaCompraLineaInline]
+    inlines = [AlbaranAsociadoInline, FacturaCompraLineaInline]
 
     readonly_fields = ('importe_subtotal', 'importe_impuestos', 'total')
 

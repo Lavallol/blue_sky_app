@@ -24,11 +24,21 @@ from inventario_app.models import Producto
 # ============================================================
 
 class FacturaCompraAlbaran(models.Model):
-    factura = models.ForeignKey(FacturaCompra, on_delete=models.CASCADE)
-    albaran = models.ForeignKey(AlbaranCompra, on_delete=models.CASCADE)
+    factura = models.ForeignKey(
+        FacturaCompra,
+        on_delete=models.CASCADE,
+        related_name='albaranes_asociados'
+    )
+    albaran = models.ForeignKey(
+        AlbaranCompra,
+        on_delete=models.CASCADE,
+        related_name='facturas_asociadas'
+    )
 
     class Meta:
         unique_together = ('factura', 'albaran')
+        verbose_name = "Albarán asociado"
+        verbose_name_plural = "Albaranes asociados"
 
     def __str__(self):
         return f"{self.factura} ↔ {self.albaran}"

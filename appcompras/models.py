@@ -318,7 +318,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
     readonly_fields = ('importe_subtotal', 'importe_impuestos', 'total')
 
-    # change_form_template = "admin/appcompras/facturacompra/change_form.html"
+    change_form_template = "admin/appcompras/facturacompra/change_form.html"
 
     # ---------------------------
     # URLs personalizadas

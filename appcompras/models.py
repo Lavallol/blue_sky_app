@@ -19,6 +19,20 @@ from inventario_app.servicios.servicio_procesar_recepcion import ServicioProcesa
 from appcompras.services.anular_factura import servicio_anular_factura
 from inventario_app.models import Producto
 
+# ============================================================
+#   MODELO INTERMEDIO MEFIE: FACTURA ↔ ALBARÁN
+# ============================================================
+
+class FacturaCompraAlbaran(models.Model):
+    factura = models.ForeignKey(FacturaCompra, on_delete=models.CASCADE)
+    albaran = models.ForeignKey(AlbaranCompra, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('factura', 'albaran')
+
+    def __str__(self):
+        return f"{self.factura} ↔ {self.albaran}"
+
 
 # ============================================================
 #   FUNCIÓN GENERAL PARA RENDERIZAR PDF (HTML por ahora)

@@ -244,6 +244,66 @@ class FacturaCompraLineaInline(admin.TabularInline):
     readonly_fields = ('total',)
     fields = ('producto', 'cantidad', 'precio_unitario', 'importe_descuento', 'importe_impuestos', 'total')
 
+# ============================================================
+#   INLINE INDUSTRIAL: ALBARANES ASOCIADOS A FACTURA
+# ============================================================
+
+
+class AlbaranAsociadoInline(admin.TabularInline):
+    model = FacturaCompraAlbaran
+    extra = 0
+    verbose_name = "Albarán asociado"
+    verbose_name_plural = "Albaranes asociados"
+
+    # Campos que se mostrarán en el inline industrial
+    readonly_fields = (
+        'fecha_albaran',
+        'numero_albaran',
+        'producto',
+        'cantidad',
+        'precio_unitario',
+        'importe_descuento',
+        'subtotal',
+        'iva',
+        'importe_impuestos',
+        'total',
+    )
+
+    fields = readonly_fields
+
+    # Evitar que Django muestre el selector M2M automático
+    can_delete = True
+
+    # Obtener las líneas del albarán
+    def fecha_albaran(self, obj):
+        return obj.albaran.fecha_recepcion
+
+    def numero_albaran(self, obj):
+        return obj.albaran.id
+
+    def producto(self, obj):
+        return ", ".join([l.producto.nombre_interno for l in obj.albaran.lineas.all()])
+
+    def cantidad(self, obj):
+        return sum([l.cantidad_recibida for l in obj.albaran.lineas.all()])
+
+    def precio_unitario(self, obj):
+        return ", ".join([str(l.precio_unitario) for l in obj.albaran.lineas.all()])
+
+    def importe_descuento(self, obj):
+        return sum([l.descuento_linea for l in obj.albaran.lineas.all()])
+
+    def subtotal(self, obj):
+        return sum([(l.cantidad_recibida * l.precio_unitario) - l.descuento_linea for l in obj.albaran.lineas.all()])
+
+    def iva(self, obj):
+        return ", ".join([str(l.iva) for l in obj.albaran.lineas.all()])
+
+    def importe_impuestos(self, obj):
+        return sum([l.iva_importe for l in obj.albaran.lineas.all()])
+
+    def total(self, obj):
+        return sum([l.total_linea for l in obj.albaran.lineas.all()])
 
 # ============================================================
 #   ADMIN DE FACTURA

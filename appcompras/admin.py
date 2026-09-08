@@ -1001,7 +1001,7 @@ class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
 #   INLINE DEL MODELO INTERMEDIO + LÍNEAS DEL ALBARÁN
 # ============================================================
 
-class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
+class LineasDeAlbaranEnFacturaInlineB(admin.TabularInline):
     model = AlbaranCompraLinea
     extra = 0
     can_delete = False
@@ -1011,7 +1011,7 @@ class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
         'fecha_albaran',
         'numero_albaran',
         'producto',
-        'cantidad',
+        'cantidad_recibida',
         'precio_unitario',
         'descuento_linea',
         'subtotal_linea',

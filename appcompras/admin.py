@@ -998,7 +998,8 @@ class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
         return obj.albaran.numero_albaran if obj.albaran else None
 
 # ============================================================
-#   INLINE DEL MODELO INTERMEDIO + LÍNEAS DEL ALBARÁN
+#   INLINE DEL MODELO INTERMEDIO (FacturaCompraAlbaran)
+#   Muestra datos del albarán asociado a la factura
 # ============================================================
 
 class LineasDeAlbaranEnFacturaInlineB(admin.TabularInline):
@@ -1007,34 +1008,27 @@ class LineasDeAlbaranEnFacturaInlineB(admin.TabularInline):
     can_delete = False
     show_change_link = False
 
+    # Campos que SÍ existen en el modelo intermedio
     fields = (
-        'fecha_albaran',
-        'numero_albaran',
-        'producto',
-        'cantidad_recibida',
-        'precio_unitario',
-        'descuento_linea',
-        'subtotal_linea',
-        'iva',
-        'importe_iva',
-        'total_linea_con_iva',
+        'albaran_numero',
+        'albaran_fecha',
+        'albaran_importe',
     )
-
     readonly_fields = fields
 
-    # Métodos industriales
-    def fecha_albaran(self, obj):
-        return obj.albaran.fecha_recepcion if obj.albaran else None
+    # Métodos industriales correctos
+    def albaran_numero(self, obj):
+        return obj.albaran.numero_albaran
 
-    def numero_albaran(self, obj):
-        return obj.albaran.numero_albaran if obj.albaran else None
+    def albaran_fecha(self, obj):
+        return obj.albaran.fecha_albaran
 
-    def subtotal_linea(self, obj):
-        return f"{obj.subtotal:.2f}"
+    def albaran_importe(self, obj):
+        return obj.albaran.importe_total
 
-    fecha_albaran.short_description = "Fecha Albarán"
-    numero_albaran.short_description = "Número Albarán"
-    subtotal_linea.short_description = "Subtotal"
+    albaran_numero.short_description = "Número Albarán"
+    albaran_fecha.short_description = "Fecha Albarán"
+    albaran_importe.short_description = "Importe"
 
 # ============================================================
 #   ADMIN DE FACTURA

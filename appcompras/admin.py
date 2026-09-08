@@ -1083,8 +1083,8 @@ class FacturaCompraAdmin(admin.ModelAdmin):
     search_fields = ('id', 'proveedor__nombre')
 
     inlines = [
-        AlbaranAsociadoInline,              # selector filtrado por proveedor
-        LineasDeAlbaranEnFacturaInline,     # líneas del albarán industriales
+        AlbaranEnFacturaInline,              # selector filtrado por proveedor
+        LineasDeAlbaranEnFacturaInline,      # líneas del albarán industriales
     ]
 
     exclude = ('albaranes',)

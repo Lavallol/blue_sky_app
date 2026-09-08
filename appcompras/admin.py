@@ -1077,7 +1077,8 @@ class FacturaCompraAdmin(admin.ModelAdmin):
     search_fields = ('id', 'proveedor__nombre')
 
     inlines = [
-        AlbaranEnFacturaInline,              # selector filtrado por proveedor
+        AlbaranEnFacturaInline,               # selector filtrado por proveedor
+        LineasDeAlbaranEnFacturaInline,       # ← Recuperado (FacturaLineas)
         LineasDeAlbaranEnFacturaInlineB,      # líneas del albarán industriales
     ]
 

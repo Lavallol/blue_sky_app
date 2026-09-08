@@ -1083,9 +1083,18 @@ class FacturaCompraAdmin(admin.ModelAdmin):
     search_fields = ('id', 'proveedor__nombre')
 
     inlines = [
-        FacturaCompraAlbaranInline,
-        FacturaCompraLineaInline,
+        AlbaranAsociadoInline,              # selector filtrado por proveedor
+        LineasDeAlbaranEnFacturaInline,     # líneas del albarán industriales
     ]
+
+    exclude = ('albaranes',)
+
+    readonly_fields = (
+        'importe_subtotal',
+        'importe_impuestos',
+        'total',
+        'tabla_albaranes',
+    )
 
     def subtotal_global(self, obj):
         return sum([

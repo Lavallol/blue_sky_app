@@ -15,7 +15,6 @@ from datetime import date
 from .models.pedido import PedidoCompra, PedidoCompraLinea
 from .models.albaran import AlbaranCompra, AlbaranCompraLinea
 from .models.factura import FacturaCompra, FacturaCompraLinea
-from .models.factura import FacturaCompraAlbaran
 from .models.condicion_pago import CondicionPago
 
 from inventario_app.servicios.servicio_procesar_recepcion import ServicioProcesarRecepcion
@@ -966,109 +965,10 @@ class AlbaranEnFacturaInline(admin.TabularInline):
                     )
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-# ============================================================
-#   INLINE PARA MOSTRAR LÍNEAS DE ALBARÁN EN LA FACTURA
-# ============================================================
-
-class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
-    model = AlbaranCompraLinea
-    extra = 0
-    can_delete = False
-    show_change_link = False
-
-    fields = (
-        'fecha_albaran',
-        'numero_albaran',
-        'producto',
-        'cantidad_recibida',
-        'precio_unitario',
-        'descuento_linea',
-        'subtotal_linea',
-        'iva',
-        'importe_iva',
-        'total_linea_con_iva',
-    )
-
-    readonly_fields = fields
-
-    def fecha_albaran(self, obj):
-        return obj.albaran.fecha_recepcion if obj.albaran else None
-
-    def numero_albaran(self, obj):
-        return obj.albaran.numero_albaran if obj.albaran else None
-
-# ============================================================
-#   INLINE DEL MODELO INTERMEDIO (FacturaCompraAlbaran)
-#   Muestra datos del albarán asociado a la factura
-# ============================================================
-
-class LineasDeAlbaranEnFacturaInlineB(admin.TabularInline):
-    model = FacturaCompraAlbaran
-    extra = 0
-    can_delete = False
-    show_change_link = False
-
-    # Campos que SÍ existen en el modelo intermedio
-    fields = (
-        'albaran_numero',
-        'albaran_fecha',
-        'albaran_importe',
-    )
-    readonly_fields = fields
-
-    # Métodos industriales correctos
-    def albaran_numero(self, obj):
-        return obj.albaran.numero_albaran
-
-    def albaran_fecha(self, obj):
-        return obj.albaran.fecha_albaran
-
-    def albaran_importe(self, obj):
-        return obj.albaran.importe_total
-
-    albaran_numero.short_description = "Número Albarán"
-    albaran_fecha.short_description = "Fecha Albarán"
-    albaran_importe.short_description = "Importe"
 
 # ============================================================
 #   ADMIN DE FACTURA
 # ============================================================
-
-# ============================================================
-#   INLINE PROFESIONAL MEFIE
-# ============================================================
-
-class FacturaCompraAlbaranInline(admin.TabularInline):
-    model = FacturaCompraAlbaran
-    extra = 0
-
-    fields = (
-        'albaran',            # ⭐ selector → imprescindible
-        'albaran_numero',
-        'albaran_fecha',
-        'albaran_importe',
-    )
-
-    readonly_fields = (
-        'albaran_numero',
-        'albaran_fecha',
-        'albaran_importe',
-    )
-
-    def albaran_numero(self, obj):
-        return obj.albaran.numero_albaran
-
-    def albaran_fecha(self, obj):
-        return obj.albaran.fecha_albaran
-
-    def albaran_importe(self, obj):
-        return obj.albaran.importe_total
-
-    # ⭐ Solo mostrar albaranes CONFIRMADOS
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "albaran":
-            kwargs["queryset"] = AlbaranCompra.objects.filter(estado="CONFIRMADO")
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 @admin.register(FacturaCompra)
 class FacturaCompraAdmin(admin.ModelAdmin):
@@ -1076,20 +976,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
     list_filter = ('estado_factura', 'proveedor', 'fecha_factura')
     search_fields = ('id', 'proveedor__nombre')
 
-    inlines = [
-        AlbaranEnFacturaInline,               # selector filtrado por proveedor
-        LineasDeAlbaranEnFacturaInline,       # ← Recuperado (FacturaLineas)
-        LineasDeAlbaranEnFacturaInlineB,      # líneas del albarán industriales
-    ]
-
-    exclude = ('albaranes',)
-
-    readonly_fields = (
-        'importe_subtotal',
-        'importe_impuestos',
-        'total',
-        'tabla_albaranes',
-    )
+    inlines = [AlbaranEnFacturaInline, FacturaCompraLineaInline]
 
     def subtotal_global(self, obj):
         return sum([

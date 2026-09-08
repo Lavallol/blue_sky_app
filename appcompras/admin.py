@@ -1002,7 +1002,7 @@ class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
 # ============================================================
 
 class LineasDeAlbaranEnFacturaInlineB(admin.TabularInline):
-    model = AlbaranCompraLinea
+    model = FacturaCompraAlbaran
     extra = 0
     can_delete = False
     show_change_link = False
@@ -1084,7 +1084,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
     inlines = [
         AlbaranEnFacturaInline,              # selector filtrado por proveedor
-        LineasDeAlbaranEnFacturaInline,      # líneas del albarán industriales
+        LineasDeAlbaranEnFacturaInlineB,      # líneas del albarán industriales
     ]
 
     exclude = ('albaranes',)

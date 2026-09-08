@@ -1035,7 +1035,6 @@ class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
     fecha_albaran.short_description = "Fecha Albarán"
     numero_albaran.short_description = "Número Albarán"
     subtotal_linea.short_description = "Subtotal"
-    total_linea_con_iva.short_description = "Total"
 
 # ============================================================
 #   ADMIN DE FACTURA

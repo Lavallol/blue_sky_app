@@ -1000,56 +1000,42 @@ class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
 # ============================================================
 #   INLINE DEL MODELO INTERMEDIO + LÍNEAS DEL ALBARÁN
 # ============================================================
-class AlbaranAsociadoInline(admin.TabularInline):
-    model = FacturaCompra.albaranes.through
+
+class LineasDeAlbaranEnFacturaInline(admin.TabularInline):
+    model = AlbaranCompraLinea
     extra = 0
-    can_delete = True
-    show_change_link = True
+    can_delete = False
+    show_change_link = False
 
     fields = (
-        'numero_albaran',
         'fecha_albaran',
-        'importe_albaran',
-        'estado_albaran',
-        'mostrar_lineas',
+        'numero_albaran',
+        'producto',
+        'cantidad',
+        'precio_unitario',
+        'descuento_linea',
+        'subtotal_linea',
+        'iva',
+        'importe_iva',
+        'total_linea_con_iva',
     )
 
     readonly_fields = fields
 
-    def numero_albaran(self, obj):
-        return obj.albaran.numero_albaran if obj.albaran else None
-
+    # Métodos industriales
     def fecha_albaran(self, obj):
         return obj.albaran.fecha_recepcion if obj.albaran else None
 
-    def importe_albaran(self, obj):
-        return obj.albaran.total if obj.albaran else None
+    def numero_albaran(self, obj):
+        return obj.albaran.numero_albaran if obj.albaran else None
 
-    def estado_albaran(self, obj):
-        return obj.albaran.estado if obj.albaran else None
+    def subtotal_linea(self, obj):
+        return f"{obj.subtotal:.2f}"
 
-    def mostrar_lineas(self, obj):
-        if not obj.albaran:
-            return "-"
-        lineas = obj.albaran.albarancompralinea_set.all()
-        html = "<table style='border-collapse: collapse; width: 100%;'>"
-        html += "<tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th><th>IVA</th><th>Total</th></tr>"
-        for linea in lineas:
-            subtotal = (linea.cantidad_recibida or 0) * (linea.precio_unitario or 0) - (linea.descuento_linea or 0)
-            html += f"""
-                <tr>
-                    <td>{linea.producto}</td>
-                    <td>{linea.cantidad_recibida}</td>
-                    <td>{linea.precio_unitario}</td>
-                    <td>{subtotal}</td>
-                    <td>{linea.iva}</td>
-                    <td>{linea.total_linea_con_iva}</td>
-                </tr>
-            """
-        html += "</table>"
-        return format_html(html)
-
-    mostrar_lineas.short_description = "Líneas del albarán"
+    fecha_albaran.short_description = "Fecha Albarán"
+    numero_albaran.short_description = "Número Albarán"
+    subtotal_linea.short_description = "Subtotal"
+    total_linea_con_iva.short_description = "Total"
 
 # ============================================================
 #   ADMIN DE FACTURA

@@ -989,7 +989,6 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
     inlines = [
         SelectorAlbaranesInline,      # Selector de albaranes CONFIRMADOS
-        AlbaranCompraLineaInline,     # Inline industrial MEFIE (líneas del albarán)
         FacturaCompraLineaInline,     # Inline de líneas de factura
     ]
 

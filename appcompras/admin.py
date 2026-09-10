@@ -965,6 +965,17 @@ class AlbaranEnFacturaInline(admin.TabularInline):
                     )
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+# ============================================================
+#   INLINE SELECTOR DE ALBARANES CONFIRMADOS (MEFIE)
+# ============================================================
+
+class SelectorAlbaranesInline(admin.TabularInline):
+    model = FacturaCompra.albaranes.through
+    extra = 0
+    verbose_name = "Albarán confirmado"
+    verbose_name_plural = "Albaranes confirmados"
+    can_delete = False
+    readonly_fields = ()
 
 # ============================================================
 #   ADMIN DE FACTURA

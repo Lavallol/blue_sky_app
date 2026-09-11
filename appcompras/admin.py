@@ -978,6 +978,44 @@ class SelectorAlbaranesInline(admin.TabularInline):
     readonly_fields = ()
 
 # ============================================================
+#   INLINE INDUSTRIAL — LÍNEAS DEL ALBARÁN EN LA FACTURA
+# ============================================================
+
+class FacturaCompraAlbaranLineaInline(admin.TabularInline):
+    model = FacturaCompraAlbaranLinea
+    extra = 0
+    can_delete = True
+
+    readonly_fields = (
+        'fecha_albaran',
+        'numero_albaran',
+        'producto',
+        'cantidad',
+        'precio_unitario',
+        'descuento',
+        'subtotal',
+        'iva',
+        'importe_iva',
+        'total',
+    )
+
+    fields = readonly_fields
+
+    # Métodos industriales MEFIE
+    def fecha_albaran(self, obj):
+        return obj.albaran_linea.albaran.fecha_recepcion
+
+    def numero_albaran(self, obj):
+        return obj.albaran_linea.albaran.numero_albaran
+
+    def producto(self, obj):
+        return obj.albaran_linea.producto
+
+    fecha_albaran.short_description = "Fecha Albarán"
+    numero_albaran.short_description = "Número Albarán"
+    producto.short_description = "Producto"
+
+# ============================================================
 #   ADMIN DE FACTURA
 # ============================================================
 
@@ -988,8 +1026,9 @@ class FacturaCompraAdmin(admin.ModelAdmin):
     search_fields = ('id', 'proveedor__nombre')
 
     inlines = [
-        SelectorAlbaranesInline,      # Selector de albaranes CONFIRMADOS
-        FacturaCompraLineaInline,     # Inline de líneas de factura
+        SelectorAlbaranesInline,              # Selector de albaranes CONFIRMADOS
+        FacturaCompraAlbaranLineaInline,      # Inline industrial MEFIE
+        FacturaCompraLineaInline,             # Inline de líneas de factura
     ]
 
     def subtotal_global(self, obj):

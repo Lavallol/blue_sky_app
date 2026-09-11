@@ -1016,6 +1016,28 @@ class FacturaCompraAlbaranLineaInline(admin.TabularInline):
     numero_albaran.short_description = "Número Albarán"
     producto.short_description = "Producto"
 
+    # ============================================================
+    #   QUERYSET INDUSTRIAL — FILTRAR LÍNEAS DEL ALBARÁN POR FACTURA
+    # ============================================================
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        # Detectar la factura que se está editando
+        if hasattr(request, 'resolver_match') and request.resolver_match.kwargs.get('object_id'):
+            factura_id = request.resolver_match.kwargs['object_id']
+
+            # Filtrar SOLO las líneas vinculadas a esa factura
+            return qs.filter(
+                factura_compra_id=factura_id
+            ).select_related(
+                'albaran_linea',
+                'albaran_linea__albaran'
+            )
+
+        # Si no hay factura cargada, no mostrar nada
+        return qs.none()
+
 # ============================================================
 #   ADMIN DE FACTURA
 # ============================================================

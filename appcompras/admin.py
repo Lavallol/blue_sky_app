@@ -1126,6 +1126,31 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
     tabla_albaranes.short_description = "Albaranes asociados"
 
+    # ============================================================
+    #   SINCRONIZACIÓN INDUSTRIAL — COPIAR LÍNEAS DEL ALBARÁN A FACTURA
+    # ============================================================
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        factura = form.instance
+
+        # Crear las líneas del albarán en factura si no existen
+        for albaran in factura.albaranes_directos.all():
+            for linea in albaran.lineas.all():
+                FacturaCompraAlbaranLinea.objects.get_or_create(
+                    factura=factura,
+                    albaran_linea=linea,
+                    defaults={
+                        'cantidad': linea.cantidad_recibida,
+                        'precio_unitario': linea.precio_unitario,
+                        'descuento': linea.descuento_linea,
+                        'subtotal': linea.subtotal_linea,
+                        'iva': linea.iva,
+                        'importe_iva': linea.importe_iva,
+                        'total': linea.total_linea_con_iva,
+                    }
+                )
+
+
     # AUTOCOMPLETAR CONDICIÓN DE PAGO ANTES DEL POST
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)

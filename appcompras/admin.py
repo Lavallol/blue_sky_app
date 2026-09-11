@@ -1029,7 +1029,7 @@ class FacturaCompraAlbaranLineaInline(admin.TabularInline):
 
             # Filtrar SOLO las líneas vinculadas a esa factura
             return qs.filter(
-                factura_compra_id=factura_id
+                factura_id=factura_id
             ).select_related(
                 'albaran_linea',
                 'albaran_linea__albaran'

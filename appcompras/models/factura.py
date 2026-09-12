@@ -148,20 +148,18 @@ class FacturaCompraLinea(models.Model):
 #   MODELO INTERMEDIO MEFIE: Factura ↔ Albarán
 # ============================================================
 
-class FacturaCompraAlbaran(models.Model):
-    factura = models.ForeignKey(FacturaCompra, on_delete=models.CASCADE)
-    albaran = models.ForeignKey(AlbaranCompra, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ('factura', 'albaran')
-        verbose_name = "Albarán asociado"
-        verbose_name_plural = "Albaranes asociados"
-
-    def __str__(self):
-        return f"{self.factura.numero_factura} ↔ {self.albaran.numero_albaran}"
-
-
-
+# class FacturaCompraAlbaran(models.Model):
+#     factura = models.ForeignKey(FacturaCompra, on_delete=models.CASCADE)
+#     albaran = models.ForeignKey(AlbaranCompra, on_delete=models.CASCADE)
+#
+#
+#     class Meta:
+#         unique_together = ('factura', 'albaran')
+#         verbose_name = "Albarán asociado"
+#         verbose_name_plural = "Albaranes asociados"
+#
+#     def __str__(self):
+#         return f"{self.factura.numero_factura} ↔ {self.albaran.numero_albaran}"
 
 
 

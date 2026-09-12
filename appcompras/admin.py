@@ -1085,8 +1085,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
     def save_formset(self, request, form, formset, change):
         """
-        Este método SIEMPRE se ejecuta al guardar la factura,
-        incluso si no hay cambios en el formulario ni en el M2M.
+        Este método se ejecuta al guardar la factura.
         """
         super().save_formset(request, form, formset, change)
 
@@ -1096,17 +1095,26 @@ class FacturaCompraAdmin(admin.ModelAdmin):
         for albaran in factura.albaranes.all():
             for linea in albaran.lineas.all():
 
-                subtotal = (linea.cantidad or 0) * (linea.precio_unitario or 0) - (linea.descuento or 0)
-                importe_iva = subtotal * (linea.iva or 0)
-                total = subtotal + importe_iva
+                # Usamos los nombres REALES del modelo
+                cantidad = linea.cantidad_recibida or 0
+                precio = linea.precio_unitario or 0
+                descuento = linea.descuento_linea or 0
+                iva = linea.iva or 0
+
+                # Calcular subtotal e IVA
+                subtotal = precio * cantidad - descuento
+                importe_iva = subtotal * iva
+
+                # total_linea YA viene calculado desde el albarán
+                total = linea.total_linea or 0
 
                 FacturaCompraAlbaranLinea.objects.create(
                     factura=factura,
                     albaran_linea=linea,
-                    cantidad=linea.cantidad,
-                    precio_unitario=linea.precio_unitario,
-                    descuento=linea.descuento,
-                    iva=linea.iva,
+                    cantidad=cantidad,
+                    precio_unitario=precio,
+                    descuento=descuento,
+                    iva=iva,
                     subtotal=subtotal,
                     importe_iva=importe_iva,
                     total=total,

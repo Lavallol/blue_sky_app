@@ -1091,8 +1091,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
             for linea in albaran.lineas.all():
                 FacturaCompraAlbaranLinea.objects.get_or_create(
                     factura=factura,
-                    albaran=albaran,
-                    producto=linea.producto,
+                    albaran_linea=linea,
                     cantidad=linea.cantidad,
                     precio_unitario=linea.precio_unitario,
                     descuento=linea.descuento,

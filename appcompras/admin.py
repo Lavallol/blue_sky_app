@@ -1083,6 +1083,22 @@ class FacturaCompraAdmin(admin.ModelAdmin):
         'tabla_albaranes',
     )
 
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        factura = form.instance
+
+        for albaran in factura.albaranes.all():
+            for linea in albaran.lineas.all():
+                FacturaCompraAlbaranLinea.objects.get_or_create(
+                    factura=factura,
+                    albaran=albaran,
+                    producto=linea.producto,
+                    cantidad=linea.cantidad,
+                    precio_unitario=linea.precio_unitario,
+                    descuento=linea.descuento,
+                    iva=linea.iva,
+                )
+
     class Media:
         js = ("appcompras/autocompletar_producto.js",)
 

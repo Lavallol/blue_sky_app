@@ -1089,6 +1089,11 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
         for albaran in factura.albaranes.all():
             for linea in albaran.lineas.all():
+
+                subtotal = (linea.cantidad or 0) * (linea.precio_unitario or 0) - (linea.descuento or 0)
+                importe_iva = subtotal * (linea.iva or 0)
+                total = subtotal + importe_iva
+
                 FacturaCompraAlbaranLinea.objects.get_or_create(
                     factura=factura,
                     albaran_linea=linea,
@@ -1096,6 +1101,9 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                     precio_unitario=linea.precio_unitario,
                     descuento=linea.descuento,
                     iva=linea.iva,
+                    subtotal=subtotal,
+                    importe_iva=importe_iva,
+                    total=total,
                 )
 
     class Media:

@@ -3,4 +3,4 @@ from .albaran import AlbaranCompra, AlbaranCompraLinea
 from .factura import FacturaCompra, FacturaCompraLinea
 from .condicion_pago import CondicionPago
 from .factura_albaran_linea import FacturaCompraAlbaranLinea
-# from ..models import FacturaCompraAlbaran
+from .factura_compra_albaran import FacturaCompraAlbaran

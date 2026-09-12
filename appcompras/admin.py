@@ -1094,7 +1094,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                 importe_iva = subtotal * (linea.iva or 0)
                 total = subtotal + importe_iva
 
-                FacturaCompraAlbaranLinea.objects.get_or_create(
+                FacturaCompraAlbaranLinea.objects.create(
                     factura=factura,
                     albaran_linea=linea,
                     cantidad=linea.cantidad,

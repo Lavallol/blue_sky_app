@@ -1083,14 +1083,16 @@ class FacturaCompraAdmin(admin.ModelAdmin):
         'tabla_albaranes',
     )
 
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
+    def save_formset(self, request, form, formset, change):
+        """
+        Este método SIEMPRE se ejecuta al guardar la factura,
+        incluso si no hay cambios en el formulario ni en el M2M.
+        """
+        super().save_formset(request, form, formset, change)
 
         factura = form.instance
 
-        # Asegura que el M2M ya está guardado
-        form.save_m2m()
-
+        # Copiar líneas de todos los albaranes asociados
         for albaran in factura.albaranes.all():
             for linea in albaran.lineas.all():
 

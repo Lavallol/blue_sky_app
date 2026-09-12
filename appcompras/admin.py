@@ -1083,11 +1083,11 @@ class FacturaCompraAdmin(admin.ModelAdmin):
         'tabla_albaranes',
     )
 
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
-        factura = form.instance
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
 
-        for albaran in factura.albaranes.all():
+        # Ejecutar siempre después de guardar la factura
+        for albaran in obj.albaranes.all():
             for linea in albaran.lineas.all():
 
                 subtotal = (linea.cantidad or 0) * (linea.precio_unitario or 0) - (linea.descuento or 0)
@@ -1095,7 +1095,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                 total = subtotal + importe_iva
 
                 FacturaCompraAlbaranLinea.objects.create(
-                    factura=factura,
+                    factura=obj,
                     albaran_linea=linea,
                     cantidad=linea.cantidad,
                     precio_unitario=linea.precio_unitario,

@@ -1108,7 +1108,13 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                 # total_linea YA viene calculado desde el albarán
                 total = linea.total_linea or 0
 
-                FacturaCompraAlbaranLinea.objects.create(
+                # Evitar duplicación de líneas
+                if not FacturaCompraAlbaranLinea.objects.filter(
+                    factura=factura,
+                    albaran_linea=linea
+                ).exists():
+
+                    FacturaCompraAlbaranLinea.objects.create(
                     factura=factura,
                     albaran_linea=linea,
                     cantidad=cantidad,

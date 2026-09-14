@@ -1056,14 +1056,14 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
     def subtotal_global(self, obj):
         return sum([
-            (linea.cantidad or 0) * (linea.precio_unitario or 0) - (linea.importe_descuento or 0)
+            (linea.cantidad_recibida or 0) * (linea.precio_unitario or 0) - (linea.descuento_linea or 0)
             for linea in obj.lineas.all()
         ])
     subtotal_global.short_description = "Importe subtotal"
 
     def impuestos_global(self, obj):
         return sum([
-            linea.importe_impuestos or 0
+            ((linea.cantidad_recibida or 0) * (linea.precio_unitario or 0) - (linea.descuento_linea or 0)) * (linea.iva or 0) / 100
             for linea in obj.lineas.all()
         ])
     impuestos_global.short_description = "Importe impuestos"

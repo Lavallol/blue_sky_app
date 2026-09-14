@@ -1081,6 +1081,12 @@ class FacturaCompraAdmin(admin.ModelAdmin):
         'impuestos_global',
         'total_global',
         'tabla_albaranes',
+
+        # CAMPOS REALES DEL MODELO (estos son los que faltan)
+        'importe_descuento_global',
+        'importe_subtotal',
+        'importe_impuestos',
+        'total',
     )
 
     def save_formset(self, request, form, formset, change):

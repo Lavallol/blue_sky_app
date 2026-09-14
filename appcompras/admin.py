@@ -1126,7 +1126,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                     total=total,
                 )
 
-                factura.recalcular_totales()
+        factura.recalcular_totales()
 
     class Media:
         js = ("appcompras/autocompletar_producto.js",)

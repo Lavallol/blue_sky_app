@@ -5,6 +5,8 @@ from appcompras.models.albaran import AlbaranCompra
 
 
 class FacturaCompra(models.Model):
+    ESTADO_BORRADOR = "BORRADOR"
+
     ESTADOS_FACTURA = [
         ('BORRADOR', 'Borrador'),
         ('CONTABILIZADA', 'Contabilizada'),

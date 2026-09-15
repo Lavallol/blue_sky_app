@@ -1129,6 +1129,42 @@ class FacturaCompraAdmin(admin.ModelAdmin):
         factura.recalcular_totales()
         factura.refresh_from_db()
 
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+
+        factura = form.instance
+
+        # Solo copiar si la factura está en BORRADOR
+        if factura.estado != FacturaCompra.ESTADO_BORRADOR:
+            return
+
+        # Si ya tiene líneas reales, no copiar
+        if factura.lineas.exists():
+            return
+
+        # Copiar solo albaranes CONFIRMADOS
+        for albaran in factura.albaranes.all():
+            if albaran.estado != AlbaranCompra.ESTADO_CONFIRMADO:
+                continue
+
+            # Copiar líneas reales del albarán
+            for linea in albaran.lineas.all():
+                subtotal_linea = (linea.cantidad_recibida * linea.precio_unitario) - linea.descuento_linea
+                impuestos_linea = linea.total_linea - subtotal_linea
+
+                FacturaCompraLinea.objects.create(
+                    factura=factura,
+                    producto=linea.producto,
+                    cantidad=linea.cantidad_recibida,
+                    precio_unitario=linea.precio_unitario,
+                    importe_descuento=linea.descuento_linea,
+                    iva=linea.iva,
+                    importe_impuestos=impuestos_linea,
+                    total=linea.total_linea,
+                    fecha_albaran=albaran.fecha,
+                    numero_albaran=albaran.numero_albaran
+                )
+
     class Media:
         js = ("appcompras/autocompletar_producto.js",)
 

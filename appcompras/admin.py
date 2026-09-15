@@ -1143,7 +1143,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
             return
 
         # Copiar solo albaranes CONFIRMADOS
-        for albaran in factura.albaranes.all():
+        for albaran in factura.albaranes_directos.all():
             if albaran.estado != AlbaranCompra.ESTADO_CONFIRMADO:
                 continue
 

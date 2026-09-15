@@ -1161,7 +1161,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                     iva=linea.iva,
                     importe_impuestos=impuestos_linea,
                     total=linea.total_linea,
-                    fecha_albaran=albaran.fecha,
+                    fecha_albaran = albaran.fecha_recepcion,
                     numero_albaran=albaran.numero_albaran,
                     _skip_recalc=True
                 )

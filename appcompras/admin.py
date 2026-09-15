@@ -1167,6 +1167,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
         factura.recalcular_totales()
         factura.refresh_from_db()
+        factura.save()
 
     class Media:
         js = ("appcompras/autocompletar_producto.js",)

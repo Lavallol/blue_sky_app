@@ -130,6 +130,10 @@ class FacturaCompraLinea(models.Model):
     #   AUTOCOMPLETADO + CÁLCULO AUTOMÁTICO DE LÍNEA
     # ============================================================
     def save(self, *args, **kwargs):
+        # Evitar recalculo cuando la línea viene del albarán
+        if kwargs.pop('_skip_recalc', False):
+            return super().save(*args, **kwargs)
+
         if not self.precio_unitario:
             self.precio_unitario = self.producto.precio_compra
 

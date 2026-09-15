@@ -2,8 +2,9 @@ from django.db import models
 from inventario_app.models import Proveedor, Producto
 from .pedido import PedidoCompra
 
-
 class AlbaranCompra(models.Model):
+    ESTADO_CONFIRMADO = "CONFIRMADO"
+
     ESTADOS_ALBARAN = [
         ('BORRADOR', 'Borrador'),
         ('CONFIRMADO', 'Confirmado'),

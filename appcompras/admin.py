@@ -885,6 +885,10 @@ class FacturaCompraLineaInline(LineaAutocompletableMixin, admin.TabularInline):
     model = FacturaCompraLinea
     extra = 1
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(numero_albaran__isnull=True)
+
     def subtotal_factura(self, obj):
         cantidad = obj.cantidad or 0
         precio = obj.precio_unitario or 0

@@ -1165,6 +1165,9 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                     numero_albaran=albaran.numero_albaran
                 )
 
+        factura.recalcular_totales()
+        factura.refresh_from_db()
+
     class Media:
         js = ("appcompras/autocompletar_producto.js",)
 

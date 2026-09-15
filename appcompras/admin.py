@@ -1135,7 +1135,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
         factura = form.instance
 
         # Solo copiar si la factura está en BORRADOR
-        if factura.estado != FacturaCompra.ESTADO_BORRADOR:
+        if factura.estado_factura != FacturaCompra.ESTADO_BORRADOR:
             return
 
         # Si ya tiene líneas reales, no copiar

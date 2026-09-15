@@ -1162,7 +1162,8 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                     importe_impuestos=impuestos_linea,
                     total=linea.total_linea,
                     fecha_albaran=albaran.fecha,
-                    numero_albaran=albaran.numero_albaran
+                    numero_albaran=albaran.numero_albaran,
+                    _skip_recalc=True
                 )
 
         factura.refresh_from_db()

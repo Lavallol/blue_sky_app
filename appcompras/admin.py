@@ -1165,8 +1165,8 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                     numero_albaran=albaran.numero_albaran
                 )
 
-        factura.recalcular_totales()
         factura.refresh_from_db()
+        factura.recalcular_totales()
         factura.save()
 
     class Media:

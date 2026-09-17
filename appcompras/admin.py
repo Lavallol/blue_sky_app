@@ -1188,7 +1188,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                 f"""
                 <tr>
                     <td style="border:1px solid #ccc; padding:4px;">
-                        <a href="{url}">Albarán {a.id}</a>
+                        <a href="{url}">{a.numero_albaran}</a>
                     </td>
                     <td style="border:1px solid #ccc; padding:4px;">{a.fecha_recepcion}</td>
                     <td style="border:1px solid #ccc; padding:4px; text-align:right;">{a.total} €</td>

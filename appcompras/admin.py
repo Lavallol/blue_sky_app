@@ -1107,7 +1107,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
 
                 # Calcular subtotal e IVA
                 subtotal = precio * cantidad - descuento
-                importe_iva = subtotal * iva
+                importe_iva = subtotal * (iva / 100)
 
                 # total_linea YA viene calculado desde el albarán
                 total = linea.total_linea or 0

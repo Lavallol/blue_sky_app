@@ -1187,11 +1187,13 @@ class FacturaCompraAdmin(admin.ModelAdmin):
             filas.append(
                 f"""
                 <tr>
-                    <td style="border:1px solid #ccc; padding:4px;">
+                    <td style="border:1px solid #ccc; padding:4px; width:220px;">
                         <a href="{url}">{a.numero_albaran}</a>
                     </td>
                     <td style="border:1px solid #ccc; padding:4px;">{a.fecha_recepcion}</td>
-                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">{a.total} €</td>
+                    <td style="border:1px solid #ccc; padding:4px; text-align:right; width:180px;">
+                        {a.total} €
+                    </td>
                     <td style="border:1px solid #ccc; padding:4px;">{a.estado}</td>
                 </tr>
                 """
@@ -1201,9 +1203,9 @@ class FacturaCompraAdmin(admin.ModelAdmin):
         <table style="border-collapse:collapse; width:70%; margin-top:4px;">
             <thead>
                 <tr style="background-color:#f0f0f0;">
-                    <th style="border:1px solid #ccc; padding:4px;">Nº Albarán</th>
+                    <th style="border:1px solid #ccc; padding:4px; width:220px;">Nº Albarán</th>
                     <th style="border:1px solid #ccc; padding:4px;">Fecha</th>
-                    <th style="border:1px solid #ccc; padding:4px;">Importe</th>
+                    <th style="border:1px solid #ccc; padding:4px; width:180px;">Importe</th>
                     <th style="border:1px solid #ccc; padding:4px;">Estado</th>
                 </tr>
             </thead>

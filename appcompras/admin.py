@@ -1110,7 +1110,7 @@ class FacturaCompraAdmin(admin.ModelAdmin):
                 importe_iva = subtotal * (iva / 100)
 
                 # total_linea YA viene calculado desde el albarán
-                total = linea.total_linea or 0
+                total = subtotal + importe_iva
 
                 # Evitar duplicación de líneas
                 if not FacturaCompraAlbaranLinea.objects.filter(
